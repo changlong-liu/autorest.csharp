@@ -267,7 +267,7 @@ namespace AutoRest.CSharp.Generation.Writers
             }
         }
 
-        private string GetValueFieldName(string enumName, string enumValue, IList<EnumTypeValue> enumValues)
+        public static string GetValueFieldName(string enumName, string enumValue, IList<EnumTypeValue> enumValues)
         {
             if (enumName != $"{enumValue}Value")
             {

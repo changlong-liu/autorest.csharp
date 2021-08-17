@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -308,6 +309,10 @@ namespace AutoRest.CSharp.Utilities
         {
             var indent = new string(' ', indentation);
             return builder.Append(indent);
+        }
+        public static string ToCamelCase(string name)
+        {
+            return name.Substring(0, 1).ToLower(CultureInfo.InvariantCulture) + name.Substring(1);
         }
     }
 }
