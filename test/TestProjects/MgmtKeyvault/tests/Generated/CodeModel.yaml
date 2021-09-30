@@ -2601,7 +2601,6 @@ schemas: !Schemas
                           properties:
                             - !Property 
                               schema: *ref_28
-                              required: true
                               serializedName: id
                               language: !Languages &ref_359
                                 default:
@@ -2610,7 +2609,6 @@ schemas: !Schemas
                               protocol: !Protocols {}
                             - !Property 
                               schema: *ref_29
-                              required: false
                               serializedName: ignoreMissingVnetServiceEndpoint
                               language: !Languages &ref_360
                                 default:

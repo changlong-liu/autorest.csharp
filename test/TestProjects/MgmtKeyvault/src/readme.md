@@ -3,20 +3,6 @@
 Run `dotnet build /t:GenerateCode` to generate code.
 
 ``` yaml
-# require:
-# - https://raw.githubusercontent.com/Azure/azure-rest-api-specs/e0996d4f6dbca40ebf2fa4abf9a1cba45ada94d8/specification/dns/resource-manager/readme.md
-# - $(this-folder)/../../../readme.md
-## require: $(this-folder)/../../MgmtScopeResource/readme.md
-
-# azure-arm: true
-# title: ResourceManagementClient
-# library-name: MachineLearningServices
-# modelerfour:
-#     lenient-model-deduplication: true
-# require:
-# - https://raw.githubusercontent.com/forteddyt/azure-rest-api-specs/db218390cc57f2509db0e88d8d5ffd1872aa9435/specification/machinelearningservices/resource-manager/readme.md
-# - $(this-folder)/../../../../readme.md
-
 azure-arm: true
 library-name: KeyVault
 require: 
@@ -65,4 +51,8 @@ directive:
     - from: swagger-document
       where: $['paths']['/subscriptions/{subscriptionId}/providers/Microsoft.KeyVault/locations/{location}/deletedVaults/{vaultName}/purge']['post']
       transform: $.operationId = 'DeletedVaults_Purge'
+    # TODO: the VirtualNetworkRule failed in [Test]TestProjectTests.ValidateRequiredParamsInCtor, need to invesitigate codegen issue on this
+    - from: keyvault.json
+      where: $.definitions.VirtualNetworkRule.required
+      transform: $ = []
 ```

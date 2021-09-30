@@ -22,14 +22,16 @@ namespace AutoRest.TestServer.Tests.Mgmt.TestProjects
     public class TestProjectTests
     {
         private string _projectName;
+        private string? _subFolder;
 
         public TestProjectTests() : this("")
         {
         }
 
-        public TestProjectTests(string projectName)
+        public TestProjectTests(string projectName, string subFolder = null)
         {
             _projectName = projectName;
+            _subFolder = subFolder;
         }
 
         protected virtual IEnumerable<Type> MyTypes()
@@ -444,7 +446,7 @@ namespace AutoRest.TestServer.Tests.Mgmt.TestProjects
                 return;
             }
 
-            var output = await OutputLibraryTestBase.Generate(_projectName);
+            var output = await OutputLibraryTestBase.Generate(_projectName, _subFolder);
             var library = output.Context.Library;
             foreach (var mgmtObject in library.Models.OfType<MgmtObjectType>())
             {
