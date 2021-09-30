@@ -62,7 +62,6 @@ namespace AutoRest.CSharp.MgmtTest.Generation
             _writer.UseNamespace("NUnit.Framework");
             _writer.UseNamespace("Azure.Core.TestFramework");
             _writer.UseNamespace("Azure.ResourceManager.Resources");
-            _writer.UseNamespace("Azure.ResourceManager.Compute.Tests.Helpers");
 
             using (_writer.Namespace(TestNamespace))
             {
@@ -87,20 +86,23 @@ namespace AutoRest.CSharp.MgmtTest.Generation
                     }
 
                     WriteCreateResourceGroupMethod();
+                    WriteReplaceWith();
                 }
             }
         }
 
         public void WriteCreateResourceGroupMethod()
         {
+            _writer.UseNamespace("Azure.ResourceManager");
             using (_writer.Scope($"public static async Task<ResourceGroup> CreateResourceGroupAsync(string resourceGroupName, ArmClient client)"))
             {
-                using (_writer.Scope($"return await client.DefaultSubscription.GetResourceGroups().CreateOrUpdateAsync", start: "(", end: ")", newLine: false))
+                using (_writer.Scope($"var rgop = await client.DefaultSubscription.GetResourceGroups().CreateOrUpdateAsync", start: "(", end: ")", newLine: false))
                 {
                     _writer.Line($"resourceGroupName,");
                     _writer.Line($"new ResourceGroupData(client.DefaultSubscription.ToString()) {{ Tags = {{ {{ \"test\", \"env\" }} }} }}");
                 }
                 _writer.Append($";");
+                _writer.Append($"return rgop.Value;");
             }
             _writer.Line();
             using (_writer.Scope($"public static ResourceGroup CreateResourceGroup(string resourceGroupName, ArmClient client)"))
@@ -110,8 +112,24 @@ namespace AutoRest.CSharp.MgmtTest.Generation
                     _writer.Line($"resourceGroupName,");
                     _writer.Line($"new ResourceGroupData(client.DefaultSubscription.ToString()) {{ Tags = {{ {{ \"test\", \"env\" }} }} }}");
                 }
-                _writer.Append($";");
+                _writer.Append($".Value;");
             }
+            _writer.Line();
+        }
+
+        public void WriteReplaceWith()
+        {
+            _writer.UseNamespace("System.Collections.Generic");
+            using (_writer.Scope($"public static IDictionary<string, string> ReplaceWith(this IDictionary<string, string> dest, IDictionary<string, string> src)"))
+            {
+                _writer.Line($"dest.Clear();");
+                using (_writer.Scope($"foreach (var kv in src)"))
+                {
+                    _writer.Line($"dest.Add(kv);");
+                }
+                _writer.Line($"return dest;");
+            }
+            _writer.Line();
         }
     }
 }

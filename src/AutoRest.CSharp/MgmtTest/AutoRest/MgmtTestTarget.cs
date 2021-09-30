@@ -18,12 +18,6 @@ namespace AutoRest.CSharp.AutoRest.Plugins
         public static void Execute(GeneratedCodeWorkspace project, CodeModel codeModel, SourceInputModel? sourceInputModel, Configuration configuration)
         {
             BuildContext<MgmtOutputLibrary> context = new BuildContext<MgmtOutputLibrary>(codeModel, configuration, sourceInputModel);
-            var restClientWriter = new RestClientWriter();
-            var serializeWriter = new SerializationWriter();
-            var resourceGroupExtensionsWriter = new ResourceGroupExtensionsWriter();
-            var subscriptionExtensionsWriter = new SubscriptionExtensionsWriter();
-            var mgmtLongRunningOperationWriter = new MgmtLongRunningOperationWriter();
-
 
             var extensionsWriter = new CodeWriter();
             var mockExtensionWriter = new TestHelperWriter(extensionsWriter, context);
@@ -32,9 +26,9 @@ namespace AutoRest.CSharp.AutoRest.Plugins
 
             foreach (var resourceContainer in context.Library.ResourceContainers)
             {
-                //if (!resourceContainer.OperationGroup.ParentResourceType(context.Configuration.MgmtConfiguration).Equals(ResourceTypeBuilder.ResourceGroups))
-                if (!ResourceContainerTestWriter.CanCreateParentResourceFromExample(context, resourceContainer))
-                {   // TODO: currently generate only resourceGroup's child containers
+                if (!ResourceContainerTestWriter.CanCreateParentResourceFromExample(context, resourceContainer) ||
+                    resourceContainer.OperationGroup.ParentResourceType(context.Configuration.MgmtConfiguration).Equals(ResourceTypeBuilder.Tenant) /*Can't create from tenant from SDK*/)
+                {
                     continue;
                 }
                 var codeWriter = new CodeWriter();

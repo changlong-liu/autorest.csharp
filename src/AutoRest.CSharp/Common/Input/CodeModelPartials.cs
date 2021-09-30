@@ -465,10 +465,10 @@ namespace AutoRest.CSharp.Input
     internal partial class ExampleResponse
     {
         [YamlMember(Alias = "body")]
-        public ExampleValue Body;
+        public ExampleValue? Body;
 
         [YamlMember(Alias = "headers")]
-        public DictionaryOfAny Headers;
+        public object? Headers;
     }
 
     internal partial class ExampleParameter

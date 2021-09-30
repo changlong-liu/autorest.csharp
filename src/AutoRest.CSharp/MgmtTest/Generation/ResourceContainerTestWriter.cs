@@ -75,9 +75,9 @@ namespace AutoRest.CSharp.MgmtTest.Generation
         public void WriteContainerTest()
         {
             WriteUsings(_writer);
-            _writer.UseNamespace(TypeOfContainer.Namespace);
-            _writer.UseNamespace($"{TypeOfContainer.Namespace}.Models");
-            _writer.UseNamespace(TypeOfContainer.Namespace + ".Tests");
+            //_writer.UseNamespace(TypeOfContainer.Namespace);
+            //_writer.UseNamespace($"{TypeOfContainer.Namespace}.Models");
+            //_writer.UseNamespace(TypeOfContainer.Namespace + ".Tests");
             _writer.UseNamespace("NUnit.Framework");
             _writer.UseNamespace("System.Net");
             _writer.UseNamespace("Azure.Core.TestFramework");
@@ -453,6 +453,10 @@ namespace AutoRest.CSharp.MgmtTest.Generation
             {
                 writer.Append($"{typeof(DateTimeOffset)}.Parse({exampleValue.RawValue:L})");
             }
+            else if (cst.Name == "Guid")
+            {
+                writer.Append($"System.Guid.Parse({exampleValue.RawValue:L})");
+            }
             else if (exampleValue.RawValue is not null)
             {
                 if (new string[] { "String", "Location" }.Contains(cst.FrameworkType.Name))
@@ -485,7 +489,22 @@ namespace AutoRest.CSharp.MgmtTest.Generation
 
         protected void WriteEnumTypeExampleValue(CodeWriter writer, EnumType enumType, ExampleValue exampleValue)
         {
-            writer.AppendEnumFromString(enumType, w => w.Append($"{exampleValue.RawValue:L}"));
+            if (enumType.IsExtendable)
+            {
+                writer.AppendEnumFromString(enumType, w => w.Append($"{exampleValue.RawValue:L}"));
+            }
+            else
+            {
+                foreach (EnumTypeValue value in enumType.Values)
+                {
+                    if ((bool)enumType.BaseType.FrameworkType.GetMethod("Equals", new[] { enumType.BaseType.FrameworkType, enumType.BaseType.FrameworkType})!.Invoke(null, new object?[] { exampleValue.RawValue, value.Value.Value })!)
+                    {
+                        writer.Append($"{enumType.Declaration.Name}.{value.Declaration.Name}");
+                        return;
+                    }
+                }
+                throw new Exception($"Can't resolve {exampleValue.RawValue:L} as {enumType.Declaration.Name} value!");
+            }
         }
 
         protected void WriteExampleValue(CodeWriter writer, CSharpType cst, ExampleValue exampleValue, string variableName)
@@ -638,13 +657,14 @@ namespace AutoRest.CSharp.MgmtTest.Generation
                     }
 
                     _writer.Line();
-                    _writer.Append($"return {GetAwait(isAsync)} container.{testMethodName}(");
+                    _writer.Append($"var operation = {GetAwait(isAsync)} container.{testMethodName}(");
                     foreach (var paramName in paramNames)
                     {
                         _writer.Append($"{paramName},");
                     }
                     _writer.RemoveTrailingComma();
                     _writer.LineRaw(");");
+                    _writer.Line($"return operation.Value;");
                     break;
                 }
             }
