@@ -9,7 +9,5 @@ namespace AutoRest.TestServer.Tests.Mgmt.OutputLibrary
     internal class MgmtKeyvaultTests : OutputLibraryTestBase
     {
         public MgmtKeyvaultTests() : base("MgmtKeyvault", "tests") { }
-
-        // TODO: Add test generation tests
     }
 }

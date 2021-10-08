@@ -26,14 +26,19 @@ namespace AutoRest.CSharp.AutoRest.Plugins
 
             foreach (var resourceContainer in context.Library.ResourceContainers)
             {
-                if (!ResourceContainerTestWriter.CanCreateParentResourceFromExample(context, resourceContainer) ||
-                    resourceContainer.OperationGroup.ParentResourceType(context.Configuration.MgmtConfiguration).Equals(ResourceTypeBuilder.Tenant) /*Can't create from tenant from SDK*/)
+                if (!ResourceContainerTestWriter.CanCreateParentResourceFromExample(context, resourceContainer))
+                    // || resourceContainer.OperationGroup.ParentResourceType(context.Configuration.MgmtConfiguration).Equals(ResourceTypeBuilder.Tenant) /*Can't create from tenant from SDK*/)
+                {
+                    continue;
+                }
+                if (!ResourceContainerTestWriter.HasCreateExample(context, resourceContainer) &&
+                    !ResourceContainerTestWriter.HasGetExample(context, resourceContainer))
                 {
                     continue;
                 }
                 var codeWriter = new CodeWriter();
-                var containerWriter = new ResourceContainerTestWriter(codeWriter, resourceContainer, context);
-                containerWriter.WriteContainerTest();
+                var containerTestWriter = new ResourceContainerTestWriter(codeWriter, resourceContainer, context);
+                containerTestWriter.WriteContainerTest();
 
                 project.AddGeneratedFile($"Mock/{resourceContainer.Type.Name}Test.cs", codeWriter.ToString());
             }

@@ -49,14 +49,12 @@ namespace AutoRest.CSharp.MgmtTest.Generation
         private Resource _resource;
         private BuildContext<MgmtOutputLibrary> _context;
 
-        protected override string ContextProperty => "Parent";
-
         protected CSharpType TypeOfContainer => _resourceContainer.Type;
         protected string TypeNameOfContainer => TypeOfContainer.Name;
 
         protected string TestNamespace => TypeOfContainer.Namespace + ".Tests.Mock";
         protected override string TypeNameOfThis => TypeOfContainer.Name + "MockTests";
-        protected string TestEnvironmentName => _context.DefaultLibraryName + "TestEnvironment";
+
         protected string TestBaseName => $"MockTestBase";
 
         protected List<Parameter> containerInitiateParameters = new List<Parameter>();
@@ -693,6 +691,12 @@ namespace AutoRest.CSharp.MgmtTest.Generation
         public static bool HasCreateExample(BuildContext<MgmtOutputLibrary> context, ResourceContainer resourceContainer)
         {
             var exampleGroup = FindExampleGroup(context, resourceContainer, resourceContainer.CreateMethod);
+            return exampleGroup is not null && exampleGroup.Examples.Count() > 0;
+        }
+
+        public static bool HasGetExample(BuildContext<MgmtOutputLibrary> context, ResourceContainer resourceContainer)
+        {
+            var exampleGroup = FindExampleGroup(context, resourceContainer, resourceContainer.GetMethod?.RestClientMethod);
             return exampleGroup is not null && exampleGroup.Examples.Count() > 0;
         }
 
