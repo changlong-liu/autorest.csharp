@@ -36,8 +36,8 @@ pipeline:
 
 ```yaml $(tests)
 use-extension:
-  # "@autorest/tests": "https://amecodegenstorage.blob.core.windows.net/tools/autorest-tests-0.1.0-preview.tgz"
-  "@autorest/tests": "D:\\projects\\codegen\\autorest.tests"
+  "@autorest/tests": "https://amecodegenstorage.blob.core.windows.net/tools/autorest-tests-0.1.0-preview.tgz"
+  # "@autorest/tests": "D:\\projects\\codegen\\autorest.tests"
 
 pipeline:
   test-modeler:
