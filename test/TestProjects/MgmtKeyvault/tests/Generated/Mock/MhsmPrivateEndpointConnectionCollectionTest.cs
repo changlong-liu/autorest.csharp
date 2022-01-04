@@ -64,7 +64,6 @@ namespace MgmtKeyvault.Tests.Mock
             await foreach (var _ in collection.GetAllAsync())
             {
             }
-        ;
         }
     }
 }

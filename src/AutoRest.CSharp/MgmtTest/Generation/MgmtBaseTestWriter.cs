@@ -795,7 +795,10 @@ namespace AutoRest.CSharp.MgmtTest.Generation
                 using (_writer.Scope())
                 { }
             }
-            _writer.Line($";");
+            else
+            {
+                _writer.Line($";");
+            }
         }
     }
 }

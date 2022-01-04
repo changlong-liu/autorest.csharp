@@ -87,7 +87,6 @@ new MgmtKeyvault.Models.AccessPolicyEntry(tenantId: Guid.Parse("00000000-0000-00
             await foreach (var _ in vault.GetPrivateLinkResourcesAsync())
             {
             }
-        ;
         }
     }
 }
