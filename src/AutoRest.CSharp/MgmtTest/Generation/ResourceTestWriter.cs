@@ -150,14 +150,7 @@ namespace AutoRest.CSharp.MgmtTest.Generation
                         continue;
                     }
                     WriteTestDecorator();
-                    if (clientOperation.IsPagingOperation(Context))
-                    {
-                        _writer.Append($"public void {(resource == _resource ? "" : resource.Type.Name)}{testMethodName}{(exampleIdx > 0 ? (exampleIdx + 1).ToString() : "")}()");
-                    }
-                    else
-                    {
-                        _writer.Append($"public {GetAsyncKeyword(async)} {MgmtBaseTestWriter.GetTaskOrVoid(async)} {(resource == _resource ? "" : resource.Type.Name)}{testMethodName}{(exampleIdx > 0 ? (exampleIdx + 1).ToString() : "")}()");
-                    }
+                    _writer.Append($"public {GetAsyncKeyword(async)} {MgmtBaseTestWriter.GetTaskOrVoid(async)} {(resource == _resource ? "" : resource.Type.Name)}{testMethodName}{(exampleIdx > 0 ? (exampleIdx + 1).ToString() : "")}()");
 
                     using (_writer.Scope())
                     {
@@ -168,13 +161,7 @@ namespace AutoRest.CSharp.MgmtTest.Generation
                         List<string> paramNames = WriteOperationParameters(methodParameters, Enumerable.Empty<Parameter> (), exampleModel);
 
                         _writer.Line();
-                        _writer.Append($"{GetAwait(async && !clientOperation.IsPagingOperation(Context))} {resource.Type.Name.FirstCharToLowerCase()}.{testMethodName}(");
-                        foreach (var paramName in paramNames)
-                        {
-                            _writer.Append($"{paramName},");
-                        }
-                        _writer.RemoveTrailingComma();
-                        _writer.LineRaw(");");
+                        WriteMethodTestInvocation(async, clientOperation.IsPagingOperation(Context) || clientOperation.IsListOperation(Context, out var _), $"{resource.Type.Name.FirstCharToLowerCase()}.{testMethodName}", paramNames);
                     }
                     _writer.Line();
                     exampleIdx++;
