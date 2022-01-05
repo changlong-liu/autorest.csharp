@@ -770,7 +770,7 @@ namespace AutoRest.CSharp.MgmtTest.Generation
             return null;
         }
 
-        protected static void WriteMethodInvocation(CodeWriter writer, string methodName, List<string> paramNames)
+        protected static void WriteMethodInvocation(CodeWriter writer, string methodName, IEnumerable<string> paramNames)
         {
             writer.Append($"{methodName}(");
             foreach (var paramName in paramNames)
@@ -781,7 +781,7 @@ namespace AutoRest.CSharp.MgmtTest.Generation
             writer.Append($")");
         }
 
-        protected void WriteMethodTestInvocation(bool async, bool isPagingOperation, string methodName, List<string> paramNames)
+        protected void WriteMethodTestInvocation(bool async, bool isPagingOperation, string methodName, IEnumerable<string> paramNames)
         {
             _writer.Append($"{GetAwait(async)}");
             if (isPagingOperation)
