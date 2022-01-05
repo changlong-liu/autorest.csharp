@@ -109,10 +109,11 @@ namespace AutoRest.CSharp.MgmtTest.Generation
             }
         }
 
-        public void WriteGetResource(Resource resource, string requestPath, ExampleModel exampleModel)
+        public string WriteGetResource(Resource resource, string requestPath, ExampleModel exampleModel)
         {
             var resourceVariableName = useVariableName(resource.Type.Name.FirstCharToLowerCase());
             _writer.Line($"var {resourceVariableName} = GetArmClient().Get{resource.Type.Name}(new {typeof(ResourceIdentifier)}({MgmtBaseTestWriter.FormatResourceId(requestPath):L}));");
+            return resourceVariableName;
         }
 
         protected override CSharpType? WrapResourceDataType(CSharpType? type, MgmtRestOperation operation)
@@ -150,18 +151,19 @@ namespace AutoRest.CSharp.MgmtTest.Generation
                         continue;
                     }
                     WriteTestDecorator();
-                    _writer.Append($"public {GetAsyncKeyword(async)} {MgmtBaseTestWriter.GetTaskOrVoid(async)} {(resource == _resource ? "" : resource.Type.Name)}{testMethodName}{(exampleIdx > 0 ? (exampleIdx + 1).ToString() : "")}()");
+                    var testCaseSuffix = exampleIdx > 0 ? (exampleIdx + 1).ToString() : String.Empty;
+                    _writer.Append($"public {GetAsyncKeyword(async)} {MgmtBaseTestWriter.GetTaskOrVoid(async)} {(resource == _resource ? "" : resource.Type.Name)}{testMethodName}{testCaseSuffix}()");
 
                     using (_writer.Scope())
                     {
                         _writer.LineRaw($"// Example: {exampleModel.Name}");
                         clearVariableNames();
-                        WriteGetResource(resource, realRequestPath, exampleModel);
+                        var resourceVariableName = WriteGetResource(resource, realRequestPath, exampleModel);
 
                         List<string> paramNames = WriteOperationParameters(methodParameters, Enumerable.Empty<Parameter> (), exampleModel);
 
                         _writer.Line();
-                        WriteMethodTestInvocation(async, clientOperation.IsPagingOperation(Context) || clientOperation.IsListOperation(Context, out var _), $"{resource.Type.Name.FirstCharToLowerCase()}.{testMethodName}", paramNames);
+                        WriteMethodTestInvocation(async, clientOperation.IsPagingOperation(Context) || clientOperation.IsListOperation(Context, out var _), $"{resourceVariableName}.{testMethodName}", paramNames);
                     }
                     _writer.Line();
                     exampleIdx++;
