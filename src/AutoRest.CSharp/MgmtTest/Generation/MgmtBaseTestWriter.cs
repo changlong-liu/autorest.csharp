@@ -770,15 +770,18 @@ namespace AutoRest.CSharp.MgmtTest.Generation
             return null;
         }
 
-        protected static void WriteMethodInvocation(CodeWriter writer, string methodName, IEnumerable<string> paramNames)
+        protected static CodeWriterDelegate WriteMethodInvocation(string methodName, IEnumerable<string> paramNames)
         {
-            writer.Append($"{methodName}(");
-            foreach (var paramName in paramNames)
+            return new CodeWriterDelegate(writer =>
             {
-                writer.Append($"{paramName},");
-            }
-            writer.RemoveTrailingComma();
-            writer.Append($")");
+                writer.Append($"{methodName}(");
+                foreach (var paramName in paramNames)
+                {
+                    writer.Append($"{paramName},");
+                }
+                writer.RemoveTrailingComma();
+                writer.Append($")");
+            });
         }
 
         protected void WriteMethodTestInvocation(bool async, bool isPagingOperation, string methodName, IEnumerable<string> paramNames)
@@ -786,13 +789,12 @@ namespace AutoRest.CSharp.MgmtTest.Generation
             _writer.Append($"{GetAwait(async)}");
             if (isPagingOperation)
             {
-                using (_writer.Scope($"foreach (var _ in {new CodeWriterDelegate(w => WriteMethodInvocation(w, $"{methodName}", paramNames))})"))
+                using (_writer.Scope($"foreach (var _ in {WriteMethodInvocation($"{methodName}", paramNames)})"))
                 { }
             }
             else
             {
-                WriteMethodInvocation(_writer, $"{methodName}", paramNames);
-                _writer.Line($";");
+                _writer.Line($"{WriteMethodInvocation($"{methodName}", paramNames)};");
             }
         }
     }
