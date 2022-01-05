@@ -770,15 +770,15 @@ namespace AutoRest.CSharp.MgmtTest.Generation
             return null;
         }
 
-        protected void WriteMethodInvocation(string methodName, List<string> paramNames)
+        protected static void WriteMethodInvocation(CodeWriter writer, string methodName, List<string> paramNames)
         {
-            _writer.Append($"{methodName}(");
+            writer.Append($"{methodName}(");
             foreach (var paramName in paramNames)
             {
-                _writer.Append($"{paramName},");
+                writer.Append($"{paramName},");
             }
-            _writer.RemoveTrailingComma();
-            _writer.Append($")");
+            writer.RemoveTrailingComma();
+            writer.Append($")");
         }
 
         protected void WriteMethodTestInvocation(bool async, bool isPagingOperation, string methodName, List<string> paramNames)
@@ -786,17 +786,12 @@ namespace AutoRest.CSharp.MgmtTest.Generation
             _writer.Append($"{GetAwait(async)}");
             if (isPagingOperation)
             {
-                _writer.Append($"foreach (var _ in ");
-            }
-            WriteMethodInvocation($"{methodName}", paramNames);
-            if (isPagingOperation)
-            {
-                _writer.Append($")");
-                using (_writer.Scope())
+                using (_writer.Scope($"foreach (var _ in {new CodeWriterDelegate(w => WriteMethodInvocation(w, $"{methodName}", paramNames))})"))
                 { }
             }
             else
             {
+                WriteMethodInvocation(_writer, $"{methodName}", paramNames);
                 _writer.Line($";");
             }
         }
