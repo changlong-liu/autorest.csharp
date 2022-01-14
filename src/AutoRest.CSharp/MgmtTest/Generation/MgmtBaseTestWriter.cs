@@ -609,7 +609,7 @@ namespace AutoRest.CSharp.MgmtTest.Generation
                     continue;
                 }
                 string? paramName = null;
-                foreach (ExampleParameter exampleParameter in exampleModel.MethodParameters)
+                foreach (ExampleParameter exampleParameter in exampleModel.AllParameter)
                 {
                     if (passThruParameter.Name == exampleParameter.Parameter.CSharpName())
                     {
@@ -738,7 +738,7 @@ namespace AutoRest.CSharp.MgmtTest.Generation
         {
             return string.Join(", ", requestPath.Where(segment => segment.IsReference).Select(segment => {
                 var value = "\"default\"";
-                foreach (var parameterValue in exampleModel.ClientParameters.Concat(exampleModel.MethodParameters))
+                foreach (var parameterValue in exampleModel.AllParameter)
                 {
                     if (parameterValue.Parameter.CSharpName() == segment.ReferenceName)
                     {
@@ -761,7 +761,7 @@ namespace AutoRest.CSharp.MgmtTest.Generation
 
         public string? FindParameterValueByName(ExampleModel exampleModel, string parameterName)
         {
-            foreach (var parameterValue in exampleModel.ClientParameters.Concat(exampleModel.MethodParameters))
+            foreach (var parameterValue in exampleModel.AllParameter)
             {
                 if ((parameterValue.Parameter.Language.Default.SerializedName ?? parameterValue.Parameter.Language.Default.Name) == parameterName)
                 {
