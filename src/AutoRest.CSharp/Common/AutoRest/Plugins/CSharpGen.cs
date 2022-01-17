@@ -43,7 +43,13 @@ namespace AutoRest.CSharp.AutoRest.Plugins
 
             if (configuration.DataPlane)
             {
-                LowLevelTarget.Execute(project, codeModel, sourceInputModel, configuration);
+                if (configuration.MgmtConfiguration.TestModeler is not null)
+                {
+                    LowLevelTestTarget.Execute(project, codeModel, sourceInputModel, configuration);
+                }
+                else {
+                    LowLevelTarget.Execute(project, codeModel, sourceInputModel, configuration);
+                }
             }
             else if (configuration.AzureArm)
             {
