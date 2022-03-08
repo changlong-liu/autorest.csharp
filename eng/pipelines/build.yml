@@ -1,12 +1,4 @@
-trigger:
-  branches:
-    include:
-    - *
 
-pr:
-  branches:
-    include:
-    - *
 
 variables:
   BlobFeedUrl: https://azuresdkartifacts.blob.core.windows.net/azure-sdk-tools/index.json
