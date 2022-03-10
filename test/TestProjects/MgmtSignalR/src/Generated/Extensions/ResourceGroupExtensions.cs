@@ -5,6 +5,10 @@
 
 #nullable disable
 
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Azure;
 using Azure.ResourceManager.Resources;
 
 namespace MgmtSignalR
@@ -27,6 +31,36 @@ namespace MgmtSignalR
         public static SignalRResourceCollection GetSignalRResources(this ResourceGroup resourceGroup)
         {
             return GetExtensionClient(resourceGroup).GetSignalRResources();
+        }
+
+        /// <summary>
+        /// Get the resource and its properties.
+        /// Request Path: /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.SignalRService/signalR/{resourceName}
+        /// Operation Id: SignalR_Get
+        /// </summary>
+        /// <param name="resourceGroup"> The <see cref="ResourceGroup" /> instance the method will execute against. </param>
+        /// <param name="resourceName"> The name of the SignalR resource. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentException"> <paramref name="resourceName"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <exception cref="ArgumentNullException"> <paramref name="resourceName"/> is null. </exception>
+        public static async Task<Response<SignalRResource>> GetSignalRResourceAsync(this ResourceGroup resourceGroup, string resourceName, CancellationToken cancellationToken = default)
+        {
+            return await resourceGroup.GetSignalRResources().GetAsync(resourceName, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Get the resource and its properties.
+        /// Request Path: /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.SignalRService/signalR/{resourceName}
+        /// Operation Id: SignalR_Get
+        /// </summary>
+        /// <param name="resourceGroup"> The <see cref="ResourceGroup" /> instance the method will execute against. </param>
+        /// <param name="resourceName"> The name of the SignalR resource. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentException"> <paramref name="resourceName"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <exception cref="ArgumentNullException"> <paramref name="resourceName"/> is null. </exception>
+        public static Response<SignalRResource> GetSignalRResource(this ResourceGroup resourceGroup, string resourceName, CancellationToken cancellationToken = default)
+        {
+            return resourceGroup.GetSignalRResources().Get(resourceName, cancellationToken);
         }
     }
 }
