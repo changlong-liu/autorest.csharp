@@ -39,9 +39,9 @@ namespace MgmtSignalR
         }
 
         private ClientDiagnostics SignalRResourceSignalRClientDiagnostics => _signalRResourceSignalRClientDiagnostics ??= new ClientDiagnostics("MgmtSignalR", SignalRResource.ResourceType.Namespace, DiagnosticOptions);
-        private SignalRRestOperations SignalRResourceSignalRRestClient => _signalRResourceSignalRRestClient ??= new SignalRRestOperations(SignalRResourceSignalRClientDiagnostics, Pipeline, DiagnosticOptions.ApplicationId, BaseUri, GetApiVersionOrNull(SignalRResource.ResourceType));
+        private SignalRRestOperations SignalRResourceSignalRRestClient => _signalRResourceSignalRRestClient ??= new SignalRRestOperations(Pipeline, DiagnosticOptions.ApplicationId, BaseUri, GetApiVersionOrNull(SignalRResource.ResourceType));
         private ClientDiagnostics UsagesClientDiagnostics => _usagesClientDiagnostics ??= new ClientDiagnostics("MgmtSignalR", ProviderConstants.DefaultProviderNamespace, DiagnosticOptions);
-        private UsagesRestOperations UsagesRestClient => _usagesRestClient ??= new UsagesRestOperations(UsagesClientDiagnostics, Pipeline, DiagnosticOptions.ApplicationId, BaseUri);
+        private UsagesRestOperations UsagesRestClient => _usagesRestClient ??= new UsagesRestOperations(Pipeline, DiagnosticOptions.ApplicationId, BaseUri);
 
         private string GetApiVersionOrNull(ResourceType resourceType)
         {
@@ -57,7 +57,7 @@ namespace MgmtSignalR
         /// <param name="location"> the region. </param>
         /// <param name="parameters"> Parameters supplied to the operation. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public async virtual Task<Response<NameAvailability>> CheckNameAvailabilitySignalRAsync(string location, NameAvailabilityParameters parameters = null, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<NameAvailability>> CheckNameAvailabilitySignalRAsync(string location, NameAvailabilityParameters parameters = null, CancellationToken cancellationToken = default)
         {
             using var scope = SignalRResourceSignalRClientDiagnostics.CreateScope("SubscriptionExtensionClient.CheckNameAvailabilitySignalR");
             scope.Start();

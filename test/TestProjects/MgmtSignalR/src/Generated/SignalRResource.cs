@@ -56,9 +56,9 @@ namespace MgmtSignalR
         {
             _signalRResourceSignalRClientDiagnostics = new ClientDiagnostics("MgmtSignalR", ResourceType.Namespace, DiagnosticOptions);
             TryGetApiVersion(ResourceType, out string signalRResourceSignalRApiVersion);
-            _signalRResourceSignalRRestClient = new SignalRRestOperations(_signalRResourceSignalRClientDiagnostics, Pipeline, DiagnosticOptions.ApplicationId, BaseUri, signalRResourceSignalRApiVersion);
+            _signalRResourceSignalRRestClient = new SignalRRestOperations(Pipeline, DiagnosticOptions.ApplicationId, BaseUri, signalRResourceSignalRApiVersion);
             _signalRPrivateLinkResourcesClientDiagnostics = new ClientDiagnostics("MgmtSignalR", ProviderConstants.DefaultProviderNamespace, DiagnosticOptions);
-            _signalRPrivateLinkResourcesRestClient = new SignalRPrivateLinkResourcesRestOperations(_signalRPrivateLinkResourcesClientDiagnostics, Pipeline, DiagnosticOptions.ApplicationId, BaseUri);
+            _signalRPrivateLinkResourcesRestClient = new SignalRPrivateLinkResourcesRestOperations(Pipeline, DiagnosticOptions.ApplicationId, BaseUri);
 #if DEBUG
 			ValidateResourceId(Id);
 #endif
@@ -101,7 +101,7 @@ namespace MgmtSignalR
         /// Operation Id: SignalR_Get
         /// </summary>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public async virtual Task<Response<SignalRResource>> GetAsync(CancellationToken cancellationToken = default)
+        public virtual async Task<Response<SignalRResource>> GetAsync(CancellationToken cancellationToken = default)
         {
             using var scope = _signalRResourceSignalRClientDiagnostics.CreateScope("SignalRResource.Get");
             scope.Start();
@@ -109,7 +109,7 @@ namespace MgmtSignalR
             {
                 var response = await _signalRResourceSignalRRestClient.GetAsync(Id.SubscriptionId, Id.ResourceGroupName, Id.Name, cancellationToken).ConfigureAwait(false);
                 if (response.Value == null)
-                    throw await _signalRResourceSignalRClientDiagnostics.CreateRequestFailedExceptionAsync(response.GetRawResponse()).ConfigureAwait(false);
+                    throw new RequestFailedException(response.GetRawResponse());
                 return Response.FromValue(new SignalRResource(Client, response.Value), response.GetRawResponse());
             }
             catch (Exception e)
@@ -133,7 +133,7 @@ namespace MgmtSignalR
             {
                 var response = _signalRResourceSignalRRestClient.Get(Id.SubscriptionId, Id.ResourceGroupName, Id.Name, cancellationToken);
                 if (response.Value == null)
-                    throw _signalRResourceSignalRClientDiagnostics.CreateRequestFailedException(response.GetRawResponse());
+                    throw new RequestFailedException(response.GetRawResponse());
                 return Response.FromValue(new SignalRResource(Client, response.Value), response.GetRawResponse());
             }
             catch (Exception e)
@@ -150,7 +150,7 @@ namespace MgmtSignalR
         /// </summary>
         /// <param name="waitForCompletion"> Waits for the completion of the long running operations. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public async virtual Task<ArmOperation> DeleteAsync(bool waitForCompletion, CancellationToken cancellationToken = default)
+        public virtual async Task<ArmOperation> DeleteAsync(bool waitForCompletion, CancellationToken cancellationToken = default)
         {
             using var scope = _signalRResourceSignalRClientDiagnostics.CreateScope("SignalRResource.Delete");
             scope.Start();
@@ -204,7 +204,7 @@ namespace MgmtSignalR
         /// <param name="parameters"> Parameters for the update operation. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="parameters"/> is null. </exception>
-        public async virtual Task<ArmOperation<SignalRResource>> UpdateAsync(bool waitForCompletion, SignalRResourceData parameters, CancellationToken cancellationToken = default)
+        public virtual async Task<ArmOperation<SignalRResource>> UpdateAsync(bool waitForCompletion, SignalRResourceData parameters, CancellationToken cancellationToken = default)
         {
             Argument.AssertNotNull(parameters, nameof(parameters));
 
@@ -261,7 +261,7 @@ namespace MgmtSignalR
         /// Operation Id: SignalR_ListKeys
         /// </summary>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public async virtual Task<Response<SignalRKeys>> GetKeysAsync(CancellationToken cancellationToken = default)
+        public virtual async Task<Response<SignalRKeys>> GetKeysAsync(CancellationToken cancellationToken = default)
         {
             using var scope = _signalRResourceSignalRClientDiagnostics.CreateScope("SignalRResource.GetKeys");
             scope.Start();
@@ -307,7 +307,7 @@ namespace MgmtSignalR
         /// <param name="waitForCompletion"> Waits for the completion of the long running operations. </param>
         /// <param name="parameters"> Parameter that describes the Regenerate Key Operation. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public async virtual Task<ArmOperation<SignalRKeys>> RegenerateKeyAsync(bool waitForCompletion, RegenerateKeyParameters parameters = null, CancellationToken cancellationToken = default)
+        public virtual async Task<ArmOperation<SignalRKeys>> RegenerateKeyAsync(bool waitForCompletion, RegenerateKeyParameters parameters = null, CancellationToken cancellationToken = default)
         {
             using var scope = _signalRResourceSignalRClientDiagnostics.CreateScope("SignalRResource.RegenerateKey");
             scope.Start();
@@ -360,7 +360,7 @@ namespace MgmtSignalR
         /// </summary>
         /// <param name="waitForCompletion"> Waits for the completion of the long running operations. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        public async virtual Task<ArmOperation> RestartAsync(bool waitForCompletion, CancellationToken cancellationToken = default)
+        public virtual async Task<ArmOperation> RestartAsync(bool waitForCompletion, CancellationToken cancellationToken = default)
         {
             using var scope = _signalRResourceSignalRClientDiagnostics.CreateScope("SignalRResource.Restart");
             scope.Start();
@@ -498,7 +498,7 @@ namespace MgmtSignalR
         /// <param name="value"> The value for the tag. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="key"/> or <paramref name="value"/> is null. </exception>
-        public async virtual Task<Response<SignalRResource>> AddTagAsync(string key, string value, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<SignalRResource>> AddTagAsync(string key, string value, CancellationToken cancellationToken = default)
         {
             Argument.AssertNotNull(key, nameof(key));
             Argument.AssertNotNull(value, nameof(value));
@@ -559,7 +559,7 @@ namespace MgmtSignalR
         /// <param name="tags"> The set of tags to use as replacement. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="tags"/> is null. </exception>
-        public async virtual Task<Response<SignalRResource>> SetTagsAsync(IDictionary<string, string> tags, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<SignalRResource>> SetTagsAsync(IDictionary<string, string> tags, CancellationToken cancellationToken = default)
         {
             Argument.AssertNotNull(tags, nameof(tags));
 
@@ -619,7 +619,7 @@ namespace MgmtSignalR
         /// <param name="key"> The key for the tag. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="key"/> is null. </exception>
-        public async virtual Task<Response<SignalRResource>> RemoveTagAsync(string key, CancellationToken cancellationToken = default)
+        public virtual async Task<Response<SignalRResource>> RemoveTagAsync(string key, CancellationToken cancellationToken = default)
         {
             Argument.AssertNotNull(key, nameof(key));
 
