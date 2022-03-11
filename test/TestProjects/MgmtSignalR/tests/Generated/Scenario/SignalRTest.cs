@@ -45,13 +45,17 @@ namespace MgmtSignalR.Tests.Scenario
             {
                 // Step: Generate_Unique_Name
 
-                var templatePayload = $"{{\"$schema\":\"https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#\",\"contentVersion\":\"1.0.0.0\",\"outputs\":{{\"name\":{{\"type\":\"string\",\"value\":\"[variables('name').value]\"}},\"resourceName\":{{\"type\":\"string\",\"value\":\"[variables('name').value]\"}}}},\"resources\":[],\"variables\":{{\"name\":{{\"type\":\"string\",\"metadata\":{{\"description\":\"Name of the SignalR service.\"}},\"value\":\"[concat('sw',uniqueString(resourceGroup().id))]\"}}}}}}";
+                var templatePayload = $"{{\"$schema\":\"https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#\",\"contentVersion\":\"1.0.0.0\",\"variables\":{{\"name\":{{\"value\":\"[concat('sw',uniqueString(resourceGroup().id))]\",\"metadata\":{{\"description\":\"Name of the SignalR service.\"}},\"type\":\"string\"}}}},\"resources\":[],\"outputs\":{{\"name\":{{\"type\":\"string\",\"value\":\"[variables('name').value]\"}},\"resourceName\":{{\"type\":\"string\",\"value\":\"[variables('name').value]\"}}}}}}";
                 var deploymentOperation = await resourceGroup.GetDeployments().CreateOrUpdateAsync(true, "Generate_Unique_Name", new Resources.Models.DeploymentInput(new Resources.Models.DeploymentProperties(Resources.Models.DeploymentMode.Complete)
                 {
                     Template = JsonDocument.Parse(templatePayload).RootElement,
                 }));
                 if (deploymentOperation.Value.Data.Properties.Outputs is Dictionary<string, object> deployOutputs)
                 {
+                    if (deployOutputs.ContainsKey("name") && deployOutputs["name"] is Dictionary<string, object> outputVariable)
+                    {
+                        name = outputVariable["value"].ToString();
+                    }
                 }
             }
 
