@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Azure;
 using Azure.Core;
 using Azure.Core.TestFramework;
 using Azure.ResourceManager.Resources;
@@ -41,7 +42,7 @@ namespace MgmtSignalR.Tests.Scenario
             Console.WriteLine($"Scenario variables: name -> $\"{name}\", resourceName -> $\"{resourceName}\", ");
 
             resourceGroupName = Recording.GenerateAssetName(resourceGroupName);
-            resourceGroup = (await GetArmClient().GetSubscription(new ResourceIdentifier($"/subscriptions/{subscriptionId}")).GetResourceGroups().CreateOrUpdateAsync(true, resourceGroupName, new ResourceGroupData(new AzureLocation(location)))).Value;
+            resourceGroup = (await GetArmClient().GetSubscription(new ResourceIdentifier($"/subscriptions/{subscriptionId}")).GetResourceGroups().CreateOrUpdateAsync(WaitUntil.Completed, resourceGroupName, new ResourceGroupData(new AzureLocation(location)))).Value;
             {
                 // Step: Generate_Unique_Name
 
@@ -91,7 +92,7 @@ namespace MgmtSignalR.Tests.Scenario
 
                 var subscriptionExtensions = GetArmClient().GetSubscription(new ResourceIdentifier("/subscriptions/{subscriptionId}"));
                 string location0 = "{location}";
-                MgmtSignalR.Models.NameAvailabilityParameters parameters = new MgmtSignalR.Models.NameAvailabilityParameters(type: "Microsoft.SignalRService/SignalR", name: "my-signalr-service");
+                MgmtSignalR.Models.NameAvailabilityParameters parameters = new MgmtSignalR.Models.NameAvailabilityParameters(resourceType: "Microsoft.SignalRService/SignalR", name: "my-signalr-service");
 
                 await subscriptionExtensions.CheckNameAvailabilitySignalRAsync(location0, parameters);
             }
@@ -110,7 +111,7 @@ namespace MgmtSignalR.Tests.Scenario
                     Kind = new MgmtSignalR.Models.ServiceKind("SignalR"),
                     Identity = new MgmtSignalR.Models.ManagedIdentity()
                     {
-                        Type = new MgmtSignalR.Models.ManagedIdentityType("SystemAssigned"),
+                        ManagedIdentityType = new MgmtSignalR.Models.ManagedIdentityType("SystemAssigned"),
                     },
                     NetworkACLs = new MgmtSignalR.Models.SignalRNetworkACLs()
                     {
@@ -130,7 +131,7 @@ namespace MgmtSignalR.Tests.Scenario
                 parameters.NetworkACLs.PrivateEndpoints[0].Allow.Add(new MgmtSignalR.Models.SignalRRequestType("ServerConnection"));
 
                 var collection = GetArmClient().GetResourceGroup(new ResourceIdentifier("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}")).GetSignalRResources();
-                await collection.CreateOrUpdateAsync(true, resourceName0, parameters);
+                await collection.CreateOrUpdateAsync(WaitUntil.Completed, resourceName0, parameters);
             }
 
             {
@@ -157,7 +158,7 @@ namespace MgmtSignalR.Tests.Scenario
                     Kind = new MgmtSignalR.Models.ServiceKind("SignalR"),
                     Identity = new MgmtSignalR.Models.ManagedIdentity()
                     {
-                        Type = new MgmtSignalR.Models.ManagedIdentityType("SystemAssigned"),
+                        ManagedIdentityType = new MgmtSignalR.Models.ManagedIdentityType("SystemAssigned"),
                     },
                     NetworkACLs = new MgmtSignalR.Models.SignalRNetworkACLs()
                     {
@@ -176,7 +177,7 @@ namespace MgmtSignalR.Tests.Scenario
                 parameters.Features.Add(new MgmtSignalR.Models.SignalRFeature(flag: new MgmtSignalR.Models.FeatureFlags("EnableMessagingLogs"), value: "False"));
                 parameters.NetworkACLs.PrivateEndpoints[0].Allow.Add(new MgmtSignalR.Models.SignalRRequestType("ServerConnection"));
 
-                await signalRResource.UpdateAsync(true, parameters);
+                await signalRResource.UpdateAsync(WaitUntil.Completed, parameters);
             }
 
             {
@@ -198,7 +199,7 @@ namespace MgmtSignalR.Tests.Scenario
                     KeyType = new MgmtSignalR.Models.KeyType("Primary"),
                 };
 
-                await signalRResource.RegenerateKeyAsync(true, parameters);
+                await signalRResource.RegenerateKeyAsync(WaitUntil.Completed, parameters);
             }
 
             {
@@ -207,7 +208,7 @@ namespace MgmtSignalR.Tests.Scenario
                 var signalRResourceId = MgmtSignalR.SignalRResource.CreateResourceIdentifier("{subscriptionId}", "{resourceGroupName}", "{resourceName}");
                 var signalRResource = GetArmClient().GetSignalRResource(signalRResourceId);
 
-                await signalRResource.RestartAsync(true);
+                await signalRResource.RestartAsync(WaitUntil.Completed);
             }
 
             {
@@ -252,7 +253,7 @@ namespace MgmtSignalR.Tests.Scenario
                 var signalRResourceId = MgmtSignalR.SignalRResource.CreateResourceIdentifier("{subscriptionId}", "{resourceGroupName}", "{resourceName}");
                 var signalRResource = GetArmClient().GetSignalRResource(signalRResourceId);
 
-                await signalRResource.DeleteAsync(true);
+                await signalRResource.DeleteAsync(WaitUntil.Completed);
             }
 
             resourceName = resourceNameBackup;

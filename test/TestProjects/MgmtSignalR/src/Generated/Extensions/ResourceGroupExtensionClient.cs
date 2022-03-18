@@ -36,7 +36,7 @@ namespace MgmtSignalR
         /// <returns> An object representing collection of SignalRResources and their operations over a SignalRResource. </returns>
         public virtual SignalRResourceCollection GetSignalRResources()
         {
-            return new SignalRResourceCollection(Client, Id);
+            return GetCachedClient(Client => new SignalRResourceCollection(Client, Id));
         }
     }
 }

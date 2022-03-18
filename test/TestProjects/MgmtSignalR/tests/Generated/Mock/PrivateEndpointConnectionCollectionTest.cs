@@ -7,6 +7,7 @@
 
 using System;
 using System.Net;
+using Azure;
 using Azure.Core.TestFramework;
 using Azure.ResourceManager.TestFramework;
 using MgmtSignalR;
@@ -40,7 +41,7 @@ namespace MgmtSignalR.Tests.Mock
 
             var signalRResourceId = MgmtSignalR.SignalRResource.CreateResourceIdentifier("00000000-0000-0000-0000-000000000000", "myResourceGroup", "mySignalRService");
             var collection = GetArmClient().GetSignalRResource(signalRResourceId).GetPrivateEndpointConnections();
-            await collection.CreateOrUpdateAsync(true, privateEndpointConnectionName, parameters);
+            await collection.CreateOrUpdateAsync(WaitUntil.Completed, privateEndpointConnectionName, parameters);
         }
 
         [RecordedTest]

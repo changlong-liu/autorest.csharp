@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using Azure;
 using Azure.Core;
 using Azure.Core.TestFramework;
 using Azure.ResourceManager.TestFramework;
@@ -40,7 +41,7 @@ namespace MgmtSignalR.Tests.Mock
                 Kind = new MgmtSignalR.Models.ServiceKind("SignalR"),
                 Identity = new MgmtSignalR.Models.ManagedIdentity()
                 {
-                    Type = new MgmtSignalR.Models.ManagedIdentityType("SystemAssigned"),
+                    ManagedIdentityType = new MgmtSignalR.Models.ManagedIdentityType("SystemAssigned"),
                 },
                 NetworkACLs = new MgmtSignalR.Models.SignalRNetworkACLs()
                 {
@@ -60,7 +61,7 @@ namespace MgmtSignalR.Tests.Mock
             parameters.NetworkACLs.PrivateEndpoints[0].Allow.Add(new MgmtSignalR.Models.SignalRRequestType("ServerConnection"));
 
             var collection = GetArmClient().GetResourceGroup(new ResourceIdentifier("/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/myResourceGroup")).GetSignalRResources();
-            await collection.CreateOrUpdateAsync(true, resourceName, parameters);
+            await collection.CreateOrUpdateAsync(WaitUntil.Completed, resourceName, parameters);
         }
 
         [RecordedTest]

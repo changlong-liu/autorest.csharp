@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using Azure;
 using Azure.Core.TestFramework;
 using Azure.ResourceManager.TestFramework;
 using MgmtSignalR;
@@ -41,7 +42,7 @@ namespace MgmtSignalR.Tests.Mock
             var signalRResourceId = MgmtSignalR.SignalRResource.CreateResourceIdentifier("00000000-0000-0000-0000-000000000000", "myResourceGroup", "mySignalRService");
             var signalRResource = GetArmClient().GetSignalRResource(signalRResourceId);
 
-            await signalRResource.DeleteAsync(true);
+            await signalRResource.DeleteAsync(WaitUntil.Completed);
         }
 
         [RecordedTest]
@@ -60,7 +61,7 @@ namespace MgmtSignalR.Tests.Mock
                 Kind = new MgmtSignalR.Models.ServiceKind("SignalR"),
                 Identity = new MgmtSignalR.Models.ManagedIdentity()
                 {
-                    Type = new MgmtSignalR.Models.ManagedIdentityType("SystemAssigned"),
+                    ManagedIdentityType = new MgmtSignalR.Models.ManagedIdentityType("SystemAssigned"),
                 },
                 NetworkACLs = new MgmtSignalR.Models.SignalRNetworkACLs()
                 {
@@ -79,7 +80,7 @@ namespace MgmtSignalR.Tests.Mock
             parameters.Features.Add(new MgmtSignalR.Models.SignalRFeature(flag: new MgmtSignalR.Models.FeatureFlags("EnableMessagingLogs"), value: "False"));
             parameters.NetworkACLs.PrivateEndpoints[0].Allow.Add(new MgmtSignalR.Models.SignalRRequestType("ServerConnection"));
 
-            await signalRResource.UpdateAsync(true, parameters);
+            await signalRResource.UpdateAsync(WaitUntil.Completed, parameters);
         }
 
         [RecordedTest]
@@ -103,7 +104,7 @@ namespace MgmtSignalR.Tests.Mock
                 KeyType = new MgmtSignalR.Models.KeyType("Primary"),
             };
 
-            await signalRResource.RegenerateKeyAsync(true, parameters);
+            await signalRResource.RegenerateKeyAsync(WaitUntil.Completed, parameters);
         }
 
         [RecordedTest]
@@ -113,7 +114,7 @@ namespace MgmtSignalR.Tests.Mock
             var signalRResourceId = MgmtSignalR.SignalRResource.CreateResourceIdentifier("00000000-0000-0000-0000-000000000000", "myResourceGroup", "mySignalRService");
             var signalRResource = GetArmClient().GetSignalRResource(signalRResourceId);
 
-            await signalRResource.RestartAsync(true);
+            await signalRResource.RestartAsync(WaitUntil.Completed);
         }
 
         [RecordedTest]
