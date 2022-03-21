@@ -6,9 +6,7 @@
 #nullable disable
 
 using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Threading.Tasks;
 using Azure.Core;
 using Azure.Core.TestFramework;
 using Azure.ResourceManager.TestFramework;
@@ -26,7 +24,7 @@ namespace MgmtSignalR.Tests.Mock
         }
 
         [RecordedTest]
-        public async Task CheckNameAvailabilitySignalR()
+        public async System.Threading.Tasks.Task CheckNameAvailabilitySignalR()
         {
             // Example: SignalR_CheckNameAvailability
             var subscriptionExtensions = GetArmClient().GetSubscription(new ResourceIdentifier("/subscriptions/00000000-0000-0000-0000-000000000000"));
@@ -37,7 +35,7 @@ namespace MgmtSignalR.Tests.Mock
         }
 
         [RecordedTest]
-        public async Task GetSignalRResources()
+        public async System.Threading.Tasks.Task GetSignalRResources()
         {
             // Example: SignalR_ListBySubscription
             var subscriptionExtensions = GetArmClient().GetSubscription(new ResourceIdentifier("/subscriptions/00000000-0000-0000-0000-000000000000"));
@@ -48,7 +46,7 @@ namespace MgmtSignalR.Tests.Mock
         }
 
         [RecordedTest]
-        public async Task GetUsages()
+        public async System.Threading.Tasks.Task GetUsages()
         {
             // Example: Usages_List
             var subscriptionExtensions = GetArmClient().GetSubscription(new ResourceIdentifier("/subscriptions/00000000-0000-0000-0000-000000000000"));
