@@ -10,13 +10,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using Azure;
 using Azure.Core;
+using Azure.ResourceManager;
 using Azure.ResourceManager.Resources;
 using MgmtSignalR.Models;
 
 namespace MgmtSignalR
 {
-    /// <summary> A class to add extension methods to Subscription. </summary>
-    public static partial class SubscriptionExtensions
+    /// <summary> A class to add extension methods to MgmtSignalR. </summary>
+    public static partial class MgmtSignalRExtensions
     {
         private static SubscriptionExtensionClient GetExtensionClient(Subscription subscription)
         {
@@ -124,5 +125,84 @@ namespace MgmtSignalR
 
             return GetExtensionClient(subscription).GetUsages(location, cancellationToken);
         }
+
+        private static ResourceGroupExtensionClient GetExtensionClient(ResourceGroup resourceGroup)
+        {
+            return resourceGroup.GetCachedClient((client) =>
+            {
+                return new ResourceGroupExtensionClient(client, resourceGroup.Id);
+            }
+            );
+        }
+
+        /// <summary> Gets a collection of SignalRResources in the SignalRResource. </summary>
+        /// <param name="resourceGroup"> The <see cref="ResourceGroup" /> instance the method will execute against. </param>
+        /// <returns> An object representing collection of SignalRResources and their operations over a SignalRResource. </returns>
+        public static SignalRResourceCollection GetSignalRResources(this ResourceGroup resourceGroup)
+        {
+            return GetExtensionClient(resourceGroup).GetSignalRResources();
+        }
+
+        /// <summary>
+        /// Get the resource and its properties.
+        /// Request Path: /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.SignalRService/signalR/{resourceName}
+        /// Operation Id: SignalR_Get
+        /// </summary>
+        /// <param name="resourceGroup"> The <see cref="ResourceGroup" /> instance the method will execute against. </param>
+        /// <param name="resourceName"> The name of the SignalR resource. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentException"> <paramref name="resourceName"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <exception cref="ArgumentNullException"> <paramref name="resourceName"/> is null. </exception>
+        public static async Task<Response<SignalRResource>> GetSignalRResourceAsync(this ResourceGroup resourceGroup, string resourceName, CancellationToken cancellationToken = default)
+        {
+            return await resourceGroup.GetSignalRResources().GetAsync(resourceName, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Get the resource and its properties.
+        /// Request Path: /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.SignalRService/signalR/{resourceName}
+        /// Operation Id: SignalR_Get
+        /// </summary>
+        /// <param name="resourceGroup"> The <see cref="ResourceGroup" /> instance the method will execute against. </param>
+        /// <param name="resourceName"> The name of the SignalR resource. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentException"> <paramref name="resourceName"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <exception cref="ArgumentNullException"> <paramref name="resourceName"/> is null. </exception>
+        public static Response<SignalRResource> GetSignalRResource(this ResourceGroup resourceGroup, string resourceName, CancellationToken cancellationToken = default)
+        {
+            return resourceGroup.GetSignalRResources().Get(resourceName, cancellationToken);
+        }
+
+        #region SignalRResource
+        /// <summary> Gets an object representing a SignalRResource along with the instance operations that can be performed on it but with no data. </summary>
+        /// <param name="client"> The <see cref="ArmClient" /> instance the method will execute against. </param>
+        /// <param name="id"> The resource ID of the resource to get. </param>
+        /// <returns> Returns a <see cref="SignalRResource" /> object. </returns>
+        public static SignalRResource GetSignalRResource(this ArmClient client, ResourceIdentifier id)
+        {
+            return client.GetResourceClient(() =>
+            {
+                SignalRResource.ValidateResourceId(id);
+                return new SignalRResource(client, id);
+            }
+            );
+        }
+        #endregion
+
+        #region PrivateEndpointConnection
+        /// <summary> Gets an object representing a PrivateEndpointConnection along with the instance operations that can be performed on it but with no data. </summary>
+        /// <param name="client"> The <see cref="ArmClient" /> instance the method will execute against. </param>
+        /// <param name="id"> The resource ID of the resource to get. </param>
+        /// <returns> Returns a <see cref="PrivateEndpointConnection" /> object. </returns>
+        public static PrivateEndpointConnection GetPrivateEndpointConnection(this ArmClient client, ResourceIdentifier id)
+        {
+            return client.GetResourceClient(() =>
+            {
+                PrivateEndpointConnection.ValidateResourceId(id);
+                return new PrivateEndpointConnection(client, id);
+            }
+            );
+        }
+        #endregion
     }
 }
