@@ -53,11 +53,11 @@ namespace MgmtSignalR
         /// <param name="id"> The identifier of the resource that is the target of operations. </param>
         internal SignalRResource(ArmClient client, ResourceIdentifier id) : base(client, id)
         {
-            _signalRResourceSignalRClientDiagnostics = new ClientDiagnostics("MgmtSignalR", ResourceType.Namespace, DiagnosticOptions);
+            _signalRResourceSignalRClientDiagnostics = new ClientDiagnostics("MgmtSignalR", ResourceType.Namespace, Diagnostics);
             TryGetApiVersion(ResourceType, out string signalRResourceSignalRApiVersion);
-            _signalRResourceSignalRRestClient = new SignalRRestOperations(Pipeline, DiagnosticOptions.ApplicationId, BaseUri, signalRResourceSignalRApiVersion);
-            _signalRPrivateLinkResourcesClientDiagnostics = new ClientDiagnostics("MgmtSignalR", ProviderConstants.DefaultProviderNamespace, DiagnosticOptions);
-            _signalRPrivateLinkResourcesRestClient = new SignalRPrivateLinkResourcesRestOperations(Pipeline, DiagnosticOptions.ApplicationId, BaseUri);
+            _signalRResourceSignalRRestClient = new SignalRRestOperations(Pipeline, Diagnostics.ApplicationId, Endpoint, signalRResourceSignalRApiVersion);
+            _signalRPrivateLinkResourcesClientDiagnostics = new ClientDiagnostics("MgmtSignalR", ProviderConstants.DefaultProviderNamespace, Diagnostics);
+            _signalRPrivateLinkResourcesRestClient = new SignalRPrivateLinkResourcesRestOperations(Pipeline, Diagnostics.ApplicationId, Endpoint);
 #if DEBUG
 			ValidateResourceId(Id);
 #endif
@@ -87,7 +87,7 @@ namespace MgmtSignalR
                 throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, "Invalid resource type {0} expected {1}", id.ResourceType, ResourceType), nameof(id));
         }
 
-        /// <summary> Gets a collection of PrivateEndpointConnections in the PrivateEndpointConnection. </summary>
+        /// <summary> Gets a collection of PrivateEndpointConnections in the SignalRResource. </summary>
         /// <returns> An object representing collection of PrivateEndpointConnections and their operations over a PrivateEndpointConnection. </returns>
         public virtual PrivateEndpointConnectionCollection GetPrivateEndpointConnections()
         {

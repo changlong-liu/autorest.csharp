@@ -37,10 +37,10 @@ namespace MgmtSignalR
         {
         }
 
-        private ClientDiagnostics SignalRResourceSignalRClientDiagnostics => _signalRResourceSignalRClientDiagnostics ??= new ClientDiagnostics("MgmtSignalR", SignalRResource.ResourceType.Namespace, DiagnosticOptions);
-        private SignalRRestOperations SignalRResourceSignalRRestClient => _signalRResourceSignalRRestClient ??= new SignalRRestOperations(Pipeline, DiagnosticOptions.ApplicationId, BaseUri, GetApiVersionOrNull(SignalRResource.ResourceType));
-        private ClientDiagnostics UsagesClientDiagnostics => _usagesClientDiagnostics ??= new ClientDiagnostics("MgmtSignalR", ProviderConstants.DefaultProviderNamespace, DiagnosticOptions);
-        private UsagesRestOperations UsagesRestClient => _usagesRestClient ??= new UsagesRestOperations(Pipeline, DiagnosticOptions.ApplicationId, BaseUri);
+        private ClientDiagnostics SignalRResourceSignalRClientDiagnostics => _signalRResourceSignalRClientDiagnostics ??= new ClientDiagnostics("MgmtSignalR", SignalRResource.ResourceType.Namespace, Diagnostics);
+        private SignalRRestOperations SignalRResourceSignalRRestClient => _signalRResourceSignalRRestClient ??= new SignalRRestOperations(Pipeline, Diagnostics.ApplicationId, Endpoint, GetApiVersionOrNull(SignalRResource.ResourceType));
+        private ClientDiagnostics UsagesClientDiagnostics => _usagesClientDiagnostics ??= new ClientDiagnostics("MgmtSignalR", ProviderConstants.DefaultProviderNamespace, Diagnostics);
+        private UsagesRestOperations UsagesRestClient => _usagesRestClient ??= new UsagesRestOperations(Pipeline, Diagnostics.ApplicationId, Endpoint);
 
         private string GetApiVersionOrNull(ResourceType resourceType)
         {

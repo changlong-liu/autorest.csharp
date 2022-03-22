@@ -32,9 +32,9 @@ namespace MgmtSignalR
         /// <param name="id"> The identifier of the parent resource that is the target of operations. </param>
         internal PrivateEndpointConnectionCollection(ArmClient client, ResourceIdentifier id) : base(client, id)
         {
-            _privateEndpointConnectionSignalRPrivateEndpointConnectionsClientDiagnostics = new ClientDiagnostics("MgmtSignalR", PrivateEndpointConnection.ResourceType.Namespace, DiagnosticOptions);
+            _privateEndpointConnectionSignalRPrivateEndpointConnectionsClientDiagnostics = new ClientDiagnostics("MgmtSignalR", PrivateEndpointConnection.ResourceType.Namespace, Diagnostics);
             TryGetApiVersion(PrivateEndpointConnection.ResourceType, out string privateEndpointConnectionSignalRPrivateEndpointConnectionsApiVersion);
-            _privateEndpointConnectionSignalRPrivateEndpointConnectionsRestClient = new SignalRPrivateEndpointConnectionsRestOperations(Pipeline, DiagnosticOptions.ApplicationId, BaseUri, privateEndpointConnectionSignalRPrivateEndpointConnectionsApiVersion);
+            _privateEndpointConnectionSignalRPrivateEndpointConnectionsRestClient = new SignalRPrivateEndpointConnectionsRestOperations(Pipeline, Diagnostics.ApplicationId, Endpoint, privateEndpointConnectionSignalRPrivateEndpointConnectionsApiVersion);
 #if DEBUG
 			ValidateResourceId(Id);
 #endif

@@ -31,7 +31,7 @@ namespace MgmtSignalR
             return apiVersion;
         }
 
-        /// <summary> Gets a collection of SignalRResources in the SignalRResource. </summary>
+        /// <summary> Gets a collection of SignalRResources in the ResourceGroup. </summary>
         /// <returns> An object representing collection of SignalRResources and their operations over a SignalRResource. </returns>
         public virtual SignalRResourceCollection GetSignalRResources()
         {

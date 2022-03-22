@@ -36,9 +36,9 @@ namespace MgmtSignalR
         /// <param name="id"> The identifier of the parent resource that is the target of operations. </param>
         internal SignalRResourceCollection(ArmClient client, ResourceIdentifier id) : base(client, id)
         {
-            _signalRResourceSignalRClientDiagnostics = new ClientDiagnostics("MgmtSignalR", SignalRResource.ResourceType.Namespace, DiagnosticOptions);
+            _signalRResourceSignalRClientDiagnostics = new ClientDiagnostics("MgmtSignalR", SignalRResource.ResourceType.Namespace, Diagnostics);
             TryGetApiVersion(SignalRResource.ResourceType, out string signalRResourceSignalRApiVersion);
-            _signalRResourceSignalRRestClient = new SignalRRestOperations(Pipeline, DiagnosticOptions.ApplicationId, BaseUri, signalRResourceSignalRApiVersion);
+            _signalRResourceSignalRRestClient = new SignalRRestOperations(Pipeline, Diagnostics.ApplicationId, Endpoint, signalRResourceSignalRApiVersion);
 #if DEBUG
 			ValidateResourceId(Id);
 #endif
