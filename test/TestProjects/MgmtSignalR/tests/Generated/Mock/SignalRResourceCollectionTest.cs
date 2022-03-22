@@ -6,8 +6,8 @@
 #nullable disable
 
 using System;
-using System.Collections.Generic;
 using System.Net;
+using System.Threading.Tasks;
 using Azure;
 using Azure.Core;
 using Azure.Core.TestFramework;
@@ -27,7 +27,7 @@ namespace MgmtSignalR.Tests.Mock
         }
 
         [RecordedTest]
-        public async System.Threading.Tasks.Task CreateOrUpdate()
+        public async Task CreateOrUpdate()
         {
             // Example: SignalR_CreateOrUpdate
             string resourceName = "mySignalRService";
@@ -51,10 +51,7 @@ namespace MgmtSignalR.Tests.Mock
             };
             parameters.NetworkACLs.PublicNetwork.Allow.Add(new MgmtSignalR.Models.SignalRRequestType("ClientConnection"));
             parameters.NetworkACLs.PrivateEndpoints.Add(new MgmtSignalR.Models.PrivateEndpointACL(name: "mySignalRService.1fa229cd-bf3f-47f0-8c49-afb36723997e"));
-            parameters.Tags.ReplaceWith(new Dictionary<string, string>()
-            {
-                ["key1"] = "value1",
-            });
+            parameters.Tags.ReplaceWith(null);
             parameters.Features.Add(new MgmtSignalR.Models.SignalRFeature(flag: new MgmtSignalR.Models.FeatureFlags("ServiceMode"), value: "Serverless"));
             parameters.Features.Add(new MgmtSignalR.Models.SignalRFeature(flag: new MgmtSignalR.Models.FeatureFlags("EnableConnectivityLogs"), value: "True"));
             parameters.Features.Add(new MgmtSignalR.Models.SignalRFeature(flag: new MgmtSignalR.Models.FeatureFlags("EnableMessagingLogs"), value: "False"));
@@ -65,7 +62,7 @@ namespace MgmtSignalR.Tests.Mock
         }
 
         [RecordedTest]
-        public async System.Threading.Tasks.Task Get()
+        public async Task Get()
         {
             // Example: SignalR_Get
             string resourceName = "mySignalRService";
@@ -75,7 +72,7 @@ namespace MgmtSignalR.Tests.Mock
         }
 
         [RecordedTest]
-        public async System.Threading.Tasks.Task GetAll()
+        public async Task GetAll()
         {
             // Example: SignalR_ListByResourceGroup
 

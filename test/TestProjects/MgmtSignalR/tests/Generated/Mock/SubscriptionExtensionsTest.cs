@@ -7,6 +7,7 @@
 
 using System;
 using System.Net;
+using System.Threading.Tasks;
 using Azure.Core;
 using Azure.Core.TestFramework;
 using Azure.ResourceManager.TestFramework;
@@ -24,7 +25,7 @@ namespace MgmtSignalR.Tests.Mock
         }
 
         [RecordedTest]
-        public async System.Threading.Tasks.Task CheckNameAvailabilitySignalR()
+        public async Task CheckNameAvailabilitySignalR()
         {
             // Example: SignalR_CheckNameAvailability
             var subscriptionExtensions = GetArmClient().GetSubscription(new ResourceIdentifier("/subscriptions/00000000-0000-0000-0000-000000000000"));
@@ -35,7 +36,7 @@ namespace MgmtSignalR.Tests.Mock
         }
 
         [RecordedTest]
-        public async System.Threading.Tasks.Task GetSignalRResources()
+        public async Task GetSignalRResources()
         {
             // Example: SignalR_ListBySubscription
             var subscriptionExtensions = GetArmClient().GetSubscription(new ResourceIdentifier("/subscriptions/00000000-0000-0000-0000-000000000000"));
@@ -46,7 +47,7 @@ namespace MgmtSignalR.Tests.Mock
         }
 
         [RecordedTest]
-        public async System.Threading.Tasks.Task GetUsages()
+        public async Task GetUsages()
         {
             // Example: Usages_List
             var subscriptionExtensions = GetArmClient().GetSubscription(new ResourceIdentifier("/subscriptions/00000000-0000-0000-0000-000000000000"));

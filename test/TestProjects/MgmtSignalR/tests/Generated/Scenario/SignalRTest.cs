@@ -121,10 +121,7 @@ namespace MgmtSignalR.Tests.Scenario
                 };
                 parameters.NetworkACLs.PublicNetwork.Allow.Add(new MgmtSignalR.Models.SignalRRequestType("ClientConnection"));
                 parameters.NetworkACLs.PrivateEndpoints.Add(new MgmtSignalR.Models.PrivateEndpointACL(name: "{resourceName}.1fa229cd-bf3f-47f0-8c49-afb36723997e"));
-                parameters.Tags.ReplaceWith(new Dictionary<string, string>()
-                {
-                    ["key1"] = "value1",
-                });
+                parameters.Tags.ReplaceWith(null);
                 parameters.Features.Add(new MgmtSignalR.Models.SignalRFeature(flag: new MgmtSignalR.Models.FeatureFlags("ServiceMode"), value: "Serverless"));
                 parameters.Features.Add(new MgmtSignalR.Models.SignalRFeature(flag: new MgmtSignalR.Models.FeatureFlags("EnableConnectivityLogs"), value: "True"));
                 parameters.Features.Add(new MgmtSignalR.Models.SignalRFeature(flag: new MgmtSignalR.Models.FeatureFlags("EnableMessagingLogs"), value: "False"));
@@ -168,10 +165,7 @@ namespace MgmtSignalR.Tests.Scenario
                 };
                 parameters.NetworkACLs.PublicNetwork.Allow.Add(new MgmtSignalR.Models.SignalRRequestType("ClientConnection"));
                 parameters.NetworkACLs.PrivateEndpoints.Add(new MgmtSignalR.Models.PrivateEndpointACL(name: "{resourceName}.1fa229cd-bf3f-47f0-8c49-afb36723997e"));
-                parameters.Tags.ReplaceWith(new Dictionary<string, string>()
-                {
-                    ["key1"] = "value1",
-                });
+                parameters.Tags.ReplaceWith(null);
                 parameters.Features.Add(new MgmtSignalR.Models.SignalRFeature(flag: new MgmtSignalR.Models.FeatureFlags("ServiceMode"), value: "Serverless"));
                 parameters.Features.Add(new MgmtSignalR.Models.SignalRFeature(flag: new MgmtSignalR.Models.FeatureFlags("EnableConnectivityLogs"), value: "True"));
                 parameters.Features.Add(new MgmtSignalR.Models.SignalRFeature(flag: new MgmtSignalR.Models.FeatureFlags("EnableMessagingLogs"), value: "False"));
