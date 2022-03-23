@@ -9,8 +9,8 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using Azure;
-using Azure.Core;
 using Azure.Core.TestFramework;
+using Azure.ResourceManager.Resources;
 using Azure.ResourceManager.TestFramework;
 using MgmtSignalR;
 using MgmtSignalR.Models;
@@ -57,7 +57,7 @@ namespace MgmtSignalR.Tests.Mock
             parameters.Features.Add(new MgmtSignalR.Models.SignalRFeature(flag: new MgmtSignalR.Models.FeatureFlags("EnableMessagingLogs"), value: "False"));
             parameters.NetworkACLs.PrivateEndpoints[0].Allow.Add(new MgmtSignalR.Models.SignalRRequestType("ServerConnection"));
 
-            var collection = GetArmClient().GetResourceGroupResource(new ResourceIdentifier("/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/myResourceGroup")).GetSignalRResources();
+            var collection = GetArmClient().GetResourceGroupResource(ResourceGroupResource.CreateResourceIdentifier("00000000-0000-0000-0000-000000000000", "myResourceGroup")).GetSignalRResources();
             await collection.CreateOrUpdateAsync(WaitUntil.Completed, resourceName, parameters);
         }
 
@@ -67,7 +67,7 @@ namespace MgmtSignalR.Tests.Mock
             // Example: SignalR_Get
             string resourceName = "mySignalRService";
 
-            var collection = GetArmClient().GetResourceGroupResource(new ResourceIdentifier("/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/myResourceGroup")).GetSignalRResources();
+            var collection = GetArmClient().GetResourceGroupResource(ResourceGroupResource.CreateResourceIdentifier("00000000-0000-0000-0000-000000000000", "myResourceGroup")).GetSignalRResources();
             await collection.GetAsync(resourceName);
         }
 
@@ -76,7 +76,7 @@ namespace MgmtSignalR.Tests.Mock
         {
             // Example: SignalR_ListByResourceGroup
 
-            var collection = GetArmClient().GetResourceGroupResource(new ResourceIdentifier("/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/myResourceGroup")).GetSignalRResources();
+            var collection = GetArmClient().GetResourceGroupResource(ResourceGroupResource.CreateResourceIdentifier("00000000-0000-0000-0000-000000000000", "myResourceGroup")).GetSignalRResources();
             await foreach (var _ in collection.GetAllAsync())
             {
             }
