@@ -15,10 +15,10 @@ using MgmtSignalR.Models;
 
 namespace MgmtSignalR.Tests.Mock
 {
-    /// <summary> Test for Subscription. </summary>
-    public partial class SubscriptionExtensionsMockTests : MockTestBase
+    /// <summary> Test for SubscriptionResource. </summary>
+    public partial class SubscriptionResourceExtensionsMockTests : MockTestBase
     {
-        public SubscriptionExtensionsMockTests(bool isAsync) : base(isAsync, RecordedTestMode.Record)
+        public SubscriptionResourceExtensionsMockTests(bool isAsync) : base(isAsync, RecordedTestMode.Record)
         {
             ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
             Environment.SetEnvironmentVariable("RESOURCE_MANAGER_URL", $"https://localhost:8443");
@@ -28,20 +28,20 @@ namespace MgmtSignalR.Tests.Mock
         public async Task CheckNameAvailabilitySignalR()
         {
             // Example: SignalR_CheckNameAvailability
-            var subscriptionExtensions = GetArmClient().GetSubscription(new ResourceIdentifier("/subscriptions/00000000-0000-0000-0000-000000000000"));
+            var subscriptionResourceExtensions = GetArmClient().GetSubscriptionResource(new ResourceIdentifier("/subscriptions/00000000-0000-0000-0000-000000000000"));
             string location = "eastus";
             MgmtSignalR.Models.NameAvailabilityParameters parameters = new MgmtSignalR.Models.NameAvailabilityParameters(resourceType: "Microsoft.SignalRService/SignalR", name: "my-signalr-service");
 
-            await subscriptionExtensions.CheckNameAvailabilitySignalRAsync(location, parameters);
+            await subscriptionResourceExtensions.CheckNameAvailabilitySignalRAsync(location, parameters);
         }
 
         [RecordedTest]
         public async Task GetSignalRResources()
         {
             // Example: SignalR_ListBySubscription
-            var subscriptionExtensions = GetArmClient().GetSubscription(new ResourceIdentifier("/subscriptions/00000000-0000-0000-0000-000000000000"));
+            var subscriptionResourceExtensions = GetArmClient().GetSubscriptionResource(new ResourceIdentifier("/subscriptions/00000000-0000-0000-0000-000000000000"));
 
-            await foreach (var _ in subscriptionExtensions.GetSignalRResourcesAsync())
+            await foreach (var _ in subscriptionResourceExtensions.GetSignalRResourcesAsync())
             {
             }
         }
@@ -50,10 +50,10 @@ namespace MgmtSignalR.Tests.Mock
         public async Task GetUsages()
         {
             // Example: Usages_List
-            var subscriptionExtensions = GetArmClient().GetSubscription(new ResourceIdentifier("/subscriptions/00000000-0000-0000-0000-000000000000"));
+            var subscriptionResourceExtensions = GetArmClient().GetSubscriptionResource(new ResourceIdentifier("/subscriptions/00000000-0000-0000-0000-000000000000"));
             string location = "eastus";
 
-            await foreach (var _ in subscriptionExtensions.GetUsagesAsync(location))
+            await foreach (var _ in subscriptionResourceExtensions.GetUsagesAsync(location))
             {
             }
         }

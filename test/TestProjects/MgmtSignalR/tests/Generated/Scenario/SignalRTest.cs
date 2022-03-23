@@ -42,7 +42,7 @@ namespace MgmtSignalR.Tests.Scenario
             Console.WriteLine($"Scenario variables: name -> $\"{name}\", resourceName -> $\"{resourceName}\", ");
 
             resourceGroupName = Recording.GenerateAssetName(resourceGroupName);
-            resourceGroup = (await GetArmClient().GetSubscription(new ResourceIdentifier($"/subscriptions/{subscriptionId}")).GetResourceGroups().CreateOrUpdateAsync(WaitUntil.Completed, resourceGroupName, new ResourceGroupData(new AzureLocation(location)))).Value;
+            resourceGroup = (await GetArmClient().GetSubscriptionResource(new ResourceIdentifier($"/subscriptions/{subscriptionId}")).GetResourceGroups().CreateOrUpdateAsync(WaitUntil.Completed, resourceGroupName, new ResourceGroupData(new AzureLocation(location)))).Value;
             {
                 // Step: Generate_Unique_Name
 
@@ -90,11 +90,11 @@ namespace MgmtSignalR.Tests.Scenario
             {
                 // Step: SignalR_CheckNameAvailability
 
-                var subscriptionExtensions = GetArmClient().GetSubscription(new ResourceIdentifier("/subscriptions/{subscriptionId}"));
+                var subscriptionResourceExtensions = GetArmClient().GetSubscriptionResource(new ResourceIdentifier("/subscriptions/{subscriptionId}"));
                 string location0 = "{location}";
                 MgmtSignalR.Models.NameAvailabilityParameters parameters = new MgmtSignalR.Models.NameAvailabilityParameters(resourceType: "Microsoft.SignalRService/SignalR", name: "my-signalr-service");
 
-                await subscriptionExtensions.CheckNameAvailabilitySignalRAsync(location0, parameters);
+                await subscriptionResourceExtensions.CheckNameAvailabilitySignalRAsync(location0, parameters);
             }
 
             {
@@ -127,7 +127,7 @@ namespace MgmtSignalR.Tests.Scenario
                 parameters.Features.Add(new MgmtSignalR.Models.SignalRFeature(flag: new MgmtSignalR.Models.FeatureFlags("EnableMessagingLogs"), value: "False"));
                 parameters.NetworkACLs.PrivateEndpoints[0].Allow.Add(new MgmtSignalR.Models.SignalRRequestType("ServerConnection"));
 
-                var collection = GetArmClient().GetResourceGroup(new ResourceIdentifier("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}")).GetSignalRResources();
+                var collection = GetArmClient().GetResourceGroupResource(new ResourceIdentifier("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}")).GetSignalRResources();
                 await collection.CreateOrUpdateAsync(WaitUntil.Completed, resourceName0, parameters);
             }
 
@@ -208,10 +208,10 @@ namespace MgmtSignalR.Tests.Scenario
             {
                 // Step: Usages_List
 
-                var subscriptionExtensions = GetArmClient().GetSubscription(new ResourceIdentifier("/subscriptions/{subscriptionId}"));
+                var subscriptionResourceExtensions = GetArmClient().GetSubscriptionResource(new ResourceIdentifier("/subscriptions/{subscriptionId}"));
                 string location0 = "{location}";
 
-                await foreach (var _ in subscriptionExtensions.GetUsagesAsync(location0))
+                await foreach (var _ in subscriptionResourceExtensions.GetUsagesAsync(location0))
                 {
                 }
             }
@@ -219,7 +219,7 @@ namespace MgmtSignalR.Tests.Scenario
             {
                 // Step: SignalR_ListByResourceGroup
 
-                var collection = GetArmClient().GetResourceGroup(new ResourceIdentifier("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}")).GetSignalRResources();
+                var collection = GetArmClient().GetResourceGroupResource(new ResourceIdentifier("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}")).GetSignalRResources();
                 await foreach (var _ in collection.GetAllAsync())
                 {
                 }
@@ -228,9 +228,9 @@ namespace MgmtSignalR.Tests.Scenario
             {
                 // Step: SignalR_ListBySubscription
 
-                var subscriptionExtensions = GetArmClient().GetSubscription(new ResourceIdentifier("/subscriptions/{subscriptionId}"));
+                var subscriptionResourceExtensions = GetArmClient().GetSubscriptionResource(new ResourceIdentifier("/subscriptions/{subscriptionId}"));
 
-                await foreach (var _ in subscriptionExtensions.GetSignalRResourcesAsync())
+                await foreach (var _ in subscriptionResourceExtensions.GetSignalRResourcesAsync())
                 {
                 }
             }
