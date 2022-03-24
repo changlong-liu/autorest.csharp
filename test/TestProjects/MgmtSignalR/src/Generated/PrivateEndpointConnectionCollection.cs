@@ -16,7 +16,11 @@ using Azure.ResourceManager;
 
 namespace MgmtSignalR
 {
-    /// <summary> A class representing collection of PrivateEndpointConnection and their operations over its parent. </summary>
+    /// <summary>
+    /// A class representing a collection of <see cref="PrivateEndpointConnectionResource" /> and their operations.
+    /// Each <see cref="PrivateEndpointConnectionResource" /> in the collection will belong to the same instance of <see cref="SignalRResource" />.
+    /// To get a <see cref="PrivateEndpointConnectionCollection" /> instance call the GetPrivateEndpointConnections method from an instance of <see cref="SignalRResource" />.
+    /// </summary>
     public partial class PrivateEndpointConnectionCollection : ArmCollection
     {
         private readonly ClientDiagnostics _privateEndpointConnectionSignalRPrivateEndpointConnectionsClientDiagnostics;

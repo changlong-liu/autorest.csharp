@@ -20,7 +20,11 @@ using Azure.ResourceManager.Resources;
 
 namespace MgmtSignalR
 {
-    /// <summary> A class representing collection of SignalRResource and their operations over its parent. </summary>
+    /// <summary>
+    /// A class representing a collection of <see cref="SignalRResource" /> and their operations.
+    /// Each <see cref="SignalRResource" /> in the collection will belong to the same instance of <see cref="ResourceGroupResource" />.
+    /// To get a <see cref="SignalRResourceCollection" /> instance call the GetSignalRResources method from an instance of <see cref="ResourceGroupResource" />.
+    /// </summary>
     public partial class SignalRResourceCollection : ArmCollection, IEnumerable<SignalRResource>, IAsyncEnumerable<SignalRResource>
     {
         private readonly ClientDiagnostics _signalRResourceSignalRClientDiagnostics;
