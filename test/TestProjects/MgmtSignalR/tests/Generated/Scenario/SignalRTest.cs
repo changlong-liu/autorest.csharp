@@ -7,7 +7,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Azure;
 using Azure.Core;
@@ -22,7 +21,7 @@ namespace MgmtSignalR.Tests.Scenario
     /// <summary> Test generated from Api Scenario scenarios\signalR.yaml. </summary>
     public partial class SignalR : ManagementRecordedTestBase<KeyVaultTestEnvironment>
     {
-        ResourceGroup resourceGroup;
+        ResourceGroupResource resourceGroup;
         string subscriptionId = Environment.GetEnvironmentVariable("SUBSCRIPTION_ID") ?? "00000000-00000000-00000000-00000000";
         string location = Environment.GetEnvironmentVariable("LOCATION") ?? "westus";
         string resourceGroupName = Environment.GetEnvironmentVariable("RESOURCE_GROUP_NAME") ?? "scenarioTestTempGroup";
@@ -72,7 +71,7 @@ namespace MgmtSignalR.Tests.Scenario
 }}";
                 var deploymentOperation = await resourceGroup.GetDeployments().CreateOrUpdateAsync(WaitUntil.Completed, "Generate_Unique_Name", new Resources.Models.DeploymentInput(new Resources.Models.DeploymentProperties(Resources.Models.DeploymentMode.Complete)
                 {
-                    Template = JsonDocument.Parse(templatePayload).RootElement,
+                    Template = templatePayload,
                 }));
                 var deployOutputs = deploymentOperation.Value.Data.Properties.Outputs.ToObjectFromJson<Dictionary<string, object>>();
                 if (deployOutputs.ContainsKey("name") && deployOutputs["name"] is Dictionary<string, object> nameOutput)
@@ -90,16 +89,16 @@ namespace MgmtSignalR.Tests.Scenario
 
                 var subscriptionResource = GetArmClient().GetSubscriptionResource(SubscriptionResource.CreateResourceIdentifier($"{subscriptionId}"));
                 string location0 = $"{location}";
-                MgmtSignalR.Models.NameAvailabilityParameters parameters = new MgmtSignalR.Models.NameAvailabilityParameters(resourceType: "Microsoft.SignalRService/SignalR", name: "my-signalr-service");
+                MgmtSignalR.Models.NameAvailabilityParameters nameAvailabilityParameters = new MgmtSignalR.Models.NameAvailabilityParameters(resourceType: "Microsoft.SignalRService/SignalR", name: "my-signalr-service");
 
-                await subscriptionResource.CheckNameAvailabilitySignalRAsync(location0, parameters);
+                await subscriptionResource.CheckNameAvailabilitySignalRAsync(location0, nameAvailabilityParameters);
             }
 
             {
                 // Step: SignalR_CreateOrUpdate
 
                 string resourceName0 = $"{resourceName}";
-                MgmtSignalR.SignalRResourceData parameters = new MgmtSignalR.SignalRResourceData(location: $"{location}")
+                MgmtSignalR.SignalRResourceData data = new MgmtSignalR.SignalRResourceData(location: $"{location}")
                 {
                     Sku = new MgmtSignalR.Models.ResourceSku(name: "Standard_S1")
                     {
@@ -117,19 +116,19 @@ namespace MgmtSignalR.Tests.Scenario
                         PublicNetwork = new MgmtSignalR.Models.NetworkACL(),
                     },
                 };
-                parameters.NetworkACLs.PublicNetwork.Allow.Add(new MgmtSignalR.Models.SignalRRequestType("ClientConnection"));
-                parameters.NetworkACLs.PrivateEndpoints.Add(new MgmtSignalR.Models.PrivateEndpointACL(name: $"{resourceName}.1fa229cd-bf3f-47f0-8c49-afb36723997e"));
-                parameters.Tags.ReplaceWith(new Dictionary<string, string>()
+                data.NetworkACLs.PublicNetwork.Allow.Add(new MgmtSignalR.Models.SignalRRequestType("ClientConnection"));
+                data.NetworkACLs.PrivateEndpoints.Add(new MgmtSignalR.Models.PrivateEndpointACL(name: $"{resourceName}.1fa229cd-bf3f-47f0-8c49-afb36723997e"));
+                data.Tags.ReplaceWith(new Dictionary<string, string>()
                 {
                     ["key1"] = "value1",
                 });
-                parameters.Features.Add(new MgmtSignalR.Models.SignalRFeature(flag: new MgmtSignalR.Models.FeatureFlags("ServiceMode"), value: "Serverless"));
-                parameters.Features.Add(new MgmtSignalR.Models.SignalRFeature(flag: new MgmtSignalR.Models.FeatureFlags("EnableConnectivityLogs"), value: "True"));
-                parameters.Features.Add(new MgmtSignalR.Models.SignalRFeature(flag: new MgmtSignalR.Models.FeatureFlags("EnableMessagingLogs"), value: "False"));
-                parameters.NetworkACLs.PrivateEndpoints[0].Allow.Add(new MgmtSignalR.Models.SignalRRequestType("ServerConnection"));
+                data.Features.Add(new MgmtSignalR.Models.SignalRFeature(flag: new MgmtSignalR.Models.FeatureFlags("ServiceMode"), value: "Serverless"));
+                data.Features.Add(new MgmtSignalR.Models.SignalRFeature(flag: new MgmtSignalR.Models.FeatureFlags("EnableConnectivityLogs"), value: "True"));
+                data.Features.Add(new MgmtSignalR.Models.SignalRFeature(flag: new MgmtSignalR.Models.FeatureFlags("EnableMessagingLogs"), value: "False"));
+                data.NetworkACLs.PrivateEndpoints[0].Allow.Add(new MgmtSignalR.Models.SignalRRequestType("ServerConnection"));
 
                 var collection = GetArmClient().GetResourceGroupResource(ResourceGroupResource.CreateResourceIdentifier($"{subscriptionId}", $"{resourceGroupName}")).GetSignalRResources();
-                await collection.CreateOrUpdateAsync(WaitUntil.Completed, resourceName0, parameters);
+                await collection.CreateOrUpdateAsync(WaitUntil.Completed, resourceName0, data);
             }
 
             {
@@ -146,7 +145,7 @@ namespace MgmtSignalR.Tests.Scenario
 
                 var signalRResourceId = MgmtSignalR.SignalRResource.CreateResourceIdentifier($"{subscriptionId}", $"{resourceGroupName}", $"{resourceName}");
                 var signalRResource = GetArmClient().GetSignalRResource(signalRResourceId);
-                MgmtSignalR.SignalRResourceData parameters = new MgmtSignalR.SignalRResourceData(location: $"{location}")
+                MgmtSignalR.SignalRResourceData data = new MgmtSignalR.SignalRResourceData(location: $"{location}")
                 {
                     Sku = new MgmtSignalR.Models.ResourceSku(name: "Standard_S1")
                     {
@@ -164,18 +163,18 @@ namespace MgmtSignalR.Tests.Scenario
                         PublicNetwork = new MgmtSignalR.Models.NetworkACL(),
                     },
                 };
-                parameters.NetworkACLs.PublicNetwork.Allow.Add(new MgmtSignalR.Models.SignalRRequestType("ClientConnection"));
-                parameters.NetworkACLs.PrivateEndpoints.Add(new MgmtSignalR.Models.PrivateEndpointACL(name: $"{resourceName}.1fa229cd-bf3f-47f0-8c49-afb36723997e"));
-                parameters.Tags.ReplaceWith(new Dictionary<string, string>()
+                data.NetworkACLs.PublicNetwork.Allow.Add(new MgmtSignalR.Models.SignalRRequestType("ClientConnection"));
+                data.NetworkACLs.PrivateEndpoints.Add(new MgmtSignalR.Models.PrivateEndpointACL(name: $"{resourceName}.1fa229cd-bf3f-47f0-8c49-afb36723997e"));
+                data.Tags.ReplaceWith(new Dictionary<string, string>()
                 {
                     ["key1"] = "value1",
                 });
-                parameters.Features.Add(new MgmtSignalR.Models.SignalRFeature(flag: new MgmtSignalR.Models.FeatureFlags("ServiceMode"), value: "Serverless"));
-                parameters.Features.Add(new MgmtSignalR.Models.SignalRFeature(flag: new MgmtSignalR.Models.FeatureFlags("EnableConnectivityLogs"), value: "True"));
-                parameters.Features.Add(new MgmtSignalR.Models.SignalRFeature(flag: new MgmtSignalR.Models.FeatureFlags("EnableMessagingLogs"), value: "False"));
-                parameters.NetworkACLs.PrivateEndpoints[0].Allow.Add(new MgmtSignalR.Models.SignalRRequestType("ServerConnection"));
+                data.Features.Add(new MgmtSignalR.Models.SignalRFeature(flag: new MgmtSignalR.Models.FeatureFlags("ServiceMode"), value: "Serverless"));
+                data.Features.Add(new MgmtSignalR.Models.SignalRFeature(flag: new MgmtSignalR.Models.FeatureFlags("EnableConnectivityLogs"), value: "True"));
+                data.Features.Add(new MgmtSignalR.Models.SignalRFeature(flag: new MgmtSignalR.Models.FeatureFlags("EnableMessagingLogs"), value: "False"));
+                data.NetworkACLs.PrivateEndpoints[0].Allow.Add(new MgmtSignalR.Models.SignalRRequestType("ServerConnection"));
 
-                await signalRResource.UpdateAsync(WaitUntil.Completed, parameters);
+                await signalRResource.UpdateAsync(WaitUntil.Completed, data);
             }
 
             {
@@ -192,12 +191,12 @@ namespace MgmtSignalR.Tests.Scenario
 
                 var signalRResourceId = MgmtSignalR.SignalRResource.CreateResourceIdentifier($"{subscriptionId}", $"{resourceGroupName}", $"{resourceName}");
                 var signalRResource = GetArmClient().GetSignalRResource(signalRResourceId);
-                MgmtSignalR.Models.RegenerateKeyParameters parameters = new MgmtSignalR.Models.RegenerateKeyParameters()
+                MgmtSignalR.Models.RegenerateKeyParameters regenerateKeyParameters = new MgmtSignalR.Models.RegenerateKeyParameters()
                 {
                     KeyType = new MgmtSignalR.Models.KeyType("Primary"),
                 };
 
-                await signalRResource.RegenerateKeyAsync(WaitUntil.Completed, parameters);
+                await signalRResource.RegenerateKeyAsync(WaitUntil.Completed, regenerateKeyParameters);
             }
 
             {

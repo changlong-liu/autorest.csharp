@@ -30,7 +30,7 @@ namespace MgmtSignalR.Tests.Mock
         {
             // Example: SignalRPrivateEndpointConnections_Update
             string privateEndpointConnectionName = "mySignalRService.1fa229cd-bf3f-47f0-8c49-afb36723997e";
-            MgmtSignalR.PrivateEndpointConnectionData parameters = new MgmtSignalR.PrivateEndpointConnectionData()
+            MgmtSignalR.PrivateEndpointConnectionData data = new MgmtSignalR.PrivateEndpointConnectionData()
             {
                 PrivateLinkServiceConnectionState = new MgmtSignalR.Models.PrivateLinkServiceConnectionState()
                 {
@@ -42,7 +42,7 @@ namespace MgmtSignalR.Tests.Mock
 
             var signalRResourceId = MgmtSignalR.SignalRResource.CreateResourceIdentifier("00000000-0000-0000-0000-000000000000", "myResourceGroup", "mySignalRService");
             var collection = GetArmClient().GetSignalRResource(signalRResourceId).GetPrivateEndpointConnections();
-            await collection.CreateOrUpdateAsync(WaitUntil.Completed, privateEndpointConnectionName, parameters);
+            await collection.CreateOrUpdateAsync(WaitUntil.Completed, privateEndpointConnectionName, data);
         }
 
         [RecordedTest]

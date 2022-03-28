@@ -37,7 +37,7 @@ namespace MgmtSignalR
             _userAgent = new TelemetryDetails(GetType().Assembly, applicationId);
         }
 
-        internal HttpMessage CreateCheckNameAvailabilityRequest(string subscriptionId, string location, NameAvailabilityParameters parameters)
+        internal HttpMessage CreateCheckNameAvailabilityRequest(string subscriptionId, string location, NameAvailabilityParameters nameAvailabilityParameters)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -52,11 +52,11 @@ namespace MgmtSignalR
             uri.AppendQuery("api-version", _apiVersion, true);
             request.Uri = uri;
             request.Headers.Add("Accept", "application/json");
-            if (parameters != null)
+            if (nameAvailabilityParameters != null)
             {
                 request.Headers.Add("Content-Type", "application/json");
                 var content = new Utf8JsonRequestContent();
-                content.JsonWriter.WriteObjectValue(parameters);
+                content.JsonWriter.WriteObjectValue(nameAvailabilityParameters);
                 request.Content = content;
             }
             _userAgent.Apply(message);
@@ -66,16 +66,16 @@ namespace MgmtSignalR
         /// <summary> Checks that the resource name is valid and is not already in use. </summary>
         /// <param name="subscriptionId"> Gets subscription Id which uniquely identify the Microsoft Azure subscription. The subscription ID forms part of the URI for every service call. </param>
         /// <param name="location"> the region. </param>
-        /// <param name="parameters"> Parameters supplied to the operation. </param>
+        /// <param name="nameAvailabilityParameters"> Parameters supplied to the operation. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="subscriptionId"/> or <paramref name="location"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="subscriptionId"/> or <paramref name="location"/> is an empty string, and was expected to be non-empty. </exception>
-        public async Task<Response<NameAvailability>> CheckNameAvailabilityAsync(string subscriptionId, string location, NameAvailabilityParameters parameters = null, CancellationToken cancellationToken = default)
+        public async Task<Response<NameAvailability>> CheckNameAvailabilityAsync(string subscriptionId, string location, NameAvailabilityParameters nameAvailabilityParameters = null, CancellationToken cancellationToken = default)
         {
             Argument.AssertNotNullOrEmpty(subscriptionId, nameof(subscriptionId));
             Argument.AssertNotNullOrEmpty(location, nameof(location));
 
-            using var message = CreateCheckNameAvailabilityRequest(subscriptionId, location, parameters);
+            using var message = CreateCheckNameAvailabilityRequest(subscriptionId, location, nameAvailabilityParameters);
             await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             switch (message.Response.Status)
             {
@@ -94,16 +94,16 @@ namespace MgmtSignalR
         /// <summary> Checks that the resource name is valid and is not already in use. </summary>
         /// <param name="subscriptionId"> Gets subscription Id which uniquely identify the Microsoft Azure subscription. The subscription ID forms part of the URI for every service call. </param>
         /// <param name="location"> the region. </param>
-        /// <param name="parameters"> Parameters supplied to the operation. </param>
+        /// <param name="nameAvailabilityParameters"> Parameters supplied to the operation. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="subscriptionId"/> or <paramref name="location"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="subscriptionId"/> or <paramref name="location"/> is an empty string, and was expected to be non-empty. </exception>
-        public Response<NameAvailability> CheckNameAvailability(string subscriptionId, string location, NameAvailabilityParameters parameters = null, CancellationToken cancellationToken = default)
+        public Response<NameAvailability> CheckNameAvailability(string subscriptionId, string location, NameAvailabilityParameters nameAvailabilityParameters = null, CancellationToken cancellationToken = default)
         {
             Argument.AssertNotNullOrEmpty(subscriptionId, nameof(subscriptionId));
             Argument.AssertNotNullOrEmpty(location, nameof(location));
 
-            using var message = CreateCheckNameAvailabilityRequest(subscriptionId, location, parameters);
+            using var message = CreateCheckNameAvailabilityRequest(subscriptionId, location, nameAvailabilityParameters);
             _pipeline.Send(message, cancellationToken);
             switch (message.Response.Status)
             {
@@ -341,7 +341,7 @@ namespace MgmtSignalR
             }
         }
 
-        internal HttpMessage CreateCreateOrUpdateRequest(string subscriptionId, string resourceGroupName, string resourceName, SignalRResourceData parameters)
+        internal HttpMessage CreateCreateOrUpdateRequest(string subscriptionId, string resourceGroupName, string resourceName, SignalRResourceData data)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -357,11 +357,11 @@ namespace MgmtSignalR
             uri.AppendQuery("api-version", _apiVersion, true);
             request.Uri = uri;
             request.Headers.Add("Accept", "application/json");
-            if (parameters != null)
+            if (data != null)
             {
                 request.Headers.Add("Content-Type", "application/json");
                 var content = new Utf8JsonRequestContent();
-                content.JsonWriter.WriteObjectValue(parameters);
+                content.JsonWriter.WriteObjectValue(data);
                 request.Content = content;
             }
             _userAgent.Apply(message);
@@ -372,17 +372,17 @@ namespace MgmtSignalR
         /// <param name="subscriptionId"> Gets subscription Id which uniquely identify the Microsoft Azure subscription. The subscription ID forms part of the URI for every service call. </param>
         /// <param name="resourceGroupName"> The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal. </param>
         /// <param name="resourceName"> The name of the SignalR resource. </param>
-        /// <param name="parameters"> Parameters for the create or update operation. </param>
+        /// <param name="data"> Parameters for the create or update operation. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="subscriptionId"/>, <paramref name="resourceGroupName"/> or <paramref name="resourceName"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="subscriptionId"/>, <paramref name="resourceGroupName"/> or <paramref name="resourceName"/> is an empty string, and was expected to be non-empty. </exception>
-        public async Task<Response> CreateOrUpdateAsync(string subscriptionId, string resourceGroupName, string resourceName, SignalRResourceData parameters = null, CancellationToken cancellationToken = default)
+        public async Task<Response> CreateOrUpdateAsync(string subscriptionId, string resourceGroupName, string resourceName, SignalRResourceData data = null, CancellationToken cancellationToken = default)
         {
             Argument.AssertNotNullOrEmpty(subscriptionId, nameof(subscriptionId));
             Argument.AssertNotNullOrEmpty(resourceGroupName, nameof(resourceGroupName));
             Argument.AssertNotNullOrEmpty(resourceName, nameof(resourceName));
 
-            using var message = CreateCreateOrUpdateRequest(subscriptionId, resourceGroupName, resourceName, parameters);
+            using var message = CreateCreateOrUpdateRequest(subscriptionId, resourceGroupName, resourceName, data);
             await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             switch (message.Response.Status)
             {
@@ -399,17 +399,17 @@ namespace MgmtSignalR
         /// <param name="subscriptionId"> Gets subscription Id which uniquely identify the Microsoft Azure subscription. The subscription ID forms part of the URI for every service call. </param>
         /// <param name="resourceGroupName"> The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal. </param>
         /// <param name="resourceName"> The name of the SignalR resource. </param>
-        /// <param name="parameters"> Parameters for the create or update operation. </param>
+        /// <param name="data"> Parameters for the create or update operation. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="subscriptionId"/>, <paramref name="resourceGroupName"/> or <paramref name="resourceName"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="subscriptionId"/>, <paramref name="resourceGroupName"/> or <paramref name="resourceName"/> is an empty string, and was expected to be non-empty. </exception>
-        public Response CreateOrUpdate(string subscriptionId, string resourceGroupName, string resourceName, SignalRResourceData parameters = null, CancellationToken cancellationToken = default)
+        public Response CreateOrUpdate(string subscriptionId, string resourceGroupName, string resourceName, SignalRResourceData data = null, CancellationToken cancellationToken = default)
         {
             Argument.AssertNotNullOrEmpty(subscriptionId, nameof(subscriptionId));
             Argument.AssertNotNullOrEmpty(resourceGroupName, nameof(resourceGroupName));
             Argument.AssertNotNullOrEmpty(resourceName, nameof(resourceName));
 
-            using var message = CreateCreateOrUpdateRequest(subscriptionId, resourceGroupName, resourceName, parameters);
+            using var message = CreateCreateOrUpdateRequest(subscriptionId, resourceGroupName, resourceName, data);
             _pipeline.Send(message, cancellationToken);
             switch (message.Response.Status)
             {
@@ -492,7 +492,7 @@ namespace MgmtSignalR
             }
         }
 
-        internal HttpMessage CreateUpdateRequest(string subscriptionId, string resourceGroupName, string resourceName, SignalRResourceData parameters)
+        internal HttpMessage CreateUpdateRequest(string subscriptionId, string resourceGroupName, string resourceName, SignalRResourceData data)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -510,7 +510,7 @@ namespace MgmtSignalR
             request.Headers.Add("Accept", "application/json");
             request.Headers.Add("Content-Type", "application/json");
             var content = new Utf8JsonRequestContent();
-            content.JsonWriter.WriteObjectValue(parameters);
+            content.JsonWriter.WriteObjectValue(data);
             request.Content = content;
             _userAgent.Apply(message);
             return message;
@@ -520,18 +520,18 @@ namespace MgmtSignalR
         /// <param name="subscriptionId"> Gets subscription Id which uniquely identify the Microsoft Azure subscription. The subscription ID forms part of the URI for every service call. </param>
         /// <param name="resourceGroupName"> The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal. </param>
         /// <param name="resourceName"> The name of the SignalR resource. </param>
-        /// <param name="parameters"> Parameters for the update operation. </param>
+        /// <param name="data"> Parameters for the update operation. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="subscriptionId"/>, <paramref name="resourceGroupName"/>, <paramref name="resourceName"/> or <paramref name="parameters"/> is null. </exception>
+        /// <exception cref="ArgumentNullException"> <paramref name="subscriptionId"/>, <paramref name="resourceGroupName"/>, <paramref name="resourceName"/> or <paramref name="data"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="subscriptionId"/>, <paramref name="resourceGroupName"/> or <paramref name="resourceName"/> is an empty string, and was expected to be non-empty. </exception>
-        public async Task<Response> UpdateAsync(string subscriptionId, string resourceGroupName, string resourceName, SignalRResourceData parameters, CancellationToken cancellationToken = default)
+        public async Task<Response> UpdateAsync(string subscriptionId, string resourceGroupName, string resourceName, SignalRResourceData data, CancellationToken cancellationToken = default)
         {
             Argument.AssertNotNullOrEmpty(subscriptionId, nameof(subscriptionId));
             Argument.AssertNotNullOrEmpty(resourceGroupName, nameof(resourceGroupName));
             Argument.AssertNotNullOrEmpty(resourceName, nameof(resourceName));
-            Argument.AssertNotNull(parameters, nameof(parameters));
+            Argument.AssertNotNull(data, nameof(data));
 
-            using var message = CreateUpdateRequest(subscriptionId, resourceGroupName, resourceName, parameters);
+            using var message = CreateUpdateRequest(subscriptionId, resourceGroupName, resourceName, data);
             await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             switch (message.Response.Status)
             {
@@ -547,18 +547,18 @@ namespace MgmtSignalR
         /// <param name="subscriptionId"> Gets subscription Id which uniquely identify the Microsoft Azure subscription. The subscription ID forms part of the URI for every service call. </param>
         /// <param name="resourceGroupName"> The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal. </param>
         /// <param name="resourceName"> The name of the SignalR resource. </param>
-        /// <param name="parameters"> Parameters for the update operation. </param>
+        /// <param name="data"> Parameters for the update operation. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="subscriptionId"/>, <paramref name="resourceGroupName"/>, <paramref name="resourceName"/> or <paramref name="parameters"/> is null. </exception>
+        /// <exception cref="ArgumentNullException"> <paramref name="subscriptionId"/>, <paramref name="resourceGroupName"/>, <paramref name="resourceName"/> or <paramref name="data"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="subscriptionId"/>, <paramref name="resourceGroupName"/> or <paramref name="resourceName"/> is an empty string, and was expected to be non-empty. </exception>
-        public Response Update(string subscriptionId, string resourceGroupName, string resourceName, SignalRResourceData parameters, CancellationToken cancellationToken = default)
+        public Response Update(string subscriptionId, string resourceGroupName, string resourceName, SignalRResourceData data, CancellationToken cancellationToken = default)
         {
             Argument.AssertNotNullOrEmpty(subscriptionId, nameof(subscriptionId));
             Argument.AssertNotNullOrEmpty(resourceGroupName, nameof(resourceGroupName));
             Argument.AssertNotNullOrEmpty(resourceName, nameof(resourceName));
-            Argument.AssertNotNull(parameters, nameof(parameters));
+            Argument.AssertNotNull(data, nameof(data));
 
-            using var message = CreateUpdateRequest(subscriptionId, resourceGroupName, resourceName, parameters);
+            using var message = CreateUpdateRequest(subscriptionId, resourceGroupName, resourceName, data);
             _pipeline.Send(message, cancellationToken);
             switch (message.Response.Status)
             {
@@ -649,7 +649,7 @@ namespace MgmtSignalR
             }
         }
 
-        internal HttpMessage CreateRegenerateKeyRequest(string subscriptionId, string resourceGroupName, string resourceName, RegenerateKeyParameters parameters)
+        internal HttpMessage CreateRegenerateKeyRequest(string subscriptionId, string resourceGroupName, string resourceName, RegenerateKeyParameters regenerateKeyParameters)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -666,11 +666,11 @@ namespace MgmtSignalR
             uri.AppendQuery("api-version", _apiVersion, true);
             request.Uri = uri;
             request.Headers.Add("Accept", "application/json");
-            if (parameters != null)
+            if (regenerateKeyParameters != null)
             {
                 request.Headers.Add("Content-Type", "application/json");
                 var content = new Utf8JsonRequestContent();
-                content.JsonWriter.WriteObjectValue(parameters);
+                content.JsonWriter.WriteObjectValue(regenerateKeyParameters);
                 request.Content = content;
             }
             _userAgent.Apply(message);
@@ -681,17 +681,17 @@ namespace MgmtSignalR
         /// <param name="subscriptionId"> Gets subscription Id which uniquely identify the Microsoft Azure subscription. The subscription ID forms part of the URI for every service call. </param>
         /// <param name="resourceGroupName"> The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal. </param>
         /// <param name="resourceName"> The name of the SignalR resource. </param>
-        /// <param name="parameters"> Parameter that describes the Regenerate Key Operation. </param>
+        /// <param name="regenerateKeyParameters"> Parameter that describes the Regenerate Key Operation. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="subscriptionId"/>, <paramref name="resourceGroupName"/> or <paramref name="resourceName"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="subscriptionId"/>, <paramref name="resourceGroupName"/> or <paramref name="resourceName"/> is an empty string, and was expected to be non-empty. </exception>
-        public async Task<Response> RegenerateKeyAsync(string subscriptionId, string resourceGroupName, string resourceName, RegenerateKeyParameters parameters = null, CancellationToken cancellationToken = default)
+        public async Task<Response> RegenerateKeyAsync(string subscriptionId, string resourceGroupName, string resourceName, RegenerateKeyParameters regenerateKeyParameters = null, CancellationToken cancellationToken = default)
         {
             Argument.AssertNotNullOrEmpty(subscriptionId, nameof(subscriptionId));
             Argument.AssertNotNullOrEmpty(resourceGroupName, nameof(resourceGroupName));
             Argument.AssertNotNullOrEmpty(resourceName, nameof(resourceName));
 
-            using var message = CreateRegenerateKeyRequest(subscriptionId, resourceGroupName, resourceName, parameters);
+            using var message = CreateRegenerateKeyRequest(subscriptionId, resourceGroupName, resourceName, regenerateKeyParameters);
             await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             switch (message.Response.Status)
             {
@@ -706,17 +706,17 @@ namespace MgmtSignalR
         /// <param name="subscriptionId"> Gets subscription Id which uniquely identify the Microsoft Azure subscription. The subscription ID forms part of the URI for every service call. </param>
         /// <param name="resourceGroupName"> The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal. </param>
         /// <param name="resourceName"> The name of the SignalR resource. </param>
-        /// <param name="parameters"> Parameter that describes the Regenerate Key Operation. </param>
+        /// <param name="regenerateKeyParameters"> Parameter that describes the Regenerate Key Operation. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="subscriptionId"/>, <paramref name="resourceGroupName"/> or <paramref name="resourceName"/> is null. </exception>
         /// <exception cref="ArgumentException"> <paramref name="subscriptionId"/>, <paramref name="resourceGroupName"/> or <paramref name="resourceName"/> is an empty string, and was expected to be non-empty. </exception>
-        public Response RegenerateKey(string subscriptionId, string resourceGroupName, string resourceName, RegenerateKeyParameters parameters = null, CancellationToken cancellationToken = default)
+        public Response RegenerateKey(string subscriptionId, string resourceGroupName, string resourceName, RegenerateKeyParameters regenerateKeyParameters = null, CancellationToken cancellationToken = default)
         {
             Argument.AssertNotNullOrEmpty(subscriptionId, nameof(subscriptionId));
             Argument.AssertNotNullOrEmpty(resourceGroupName, nameof(resourceGroupName));
             Argument.AssertNotNullOrEmpty(resourceName, nameof(resourceName));
 
-            using var message = CreateRegenerateKeyRequest(subscriptionId, resourceGroupName, resourceName, parameters);
+            using var message = CreateRegenerateKeyRequest(subscriptionId, resourceGroupName, resourceName, regenerateKeyParameters);
             _pipeline.Send(message, cancellationToken);
             switch (message.Response.Status)
             {

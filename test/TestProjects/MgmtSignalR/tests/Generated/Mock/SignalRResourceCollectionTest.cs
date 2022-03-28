@@ -32,7 +32,7 @@ namespace MgmtSignalR.Tests.Mock
         {
             // Example: SignalR_CreateOrUpdate
             string resourceName = "mySignalRService";
-            MgmtSignalR.SignalRResourceData parameters = new MgmtSignalR.SignalRResourceData(location: "eastus")
+            MgmtSignalR.SignalRResourceData data = new MgmtSignalR.SignalRResourceData(location: "eastus")
             {
                 Sku = new MgmtSignalR.Models.ResourceSku(name: "Standard_S1")
                 {
@@ -50,19 +50,19 @@ namespace MgmtSignalR.Tests.Mock
                     PublicNetwork = new MgmtSignalR.Models.NetworkACL(),
                 },
             };
-            parameters.NetworkACLs.PublicNetwork.Allow.Add(new MgmtSignalR.Models.SignalRRequestType("ClientConnection"));
-            parameters.NetworkACLs.PrivateEndpoints.Add(new MgmtSignalR.Models.PrivateEndpointACL(name: "mySignalRService.1fa229cd-bf3f-47f0-8c49-afb36723997e"));
-            parameters.Tags.ReplaceWith(new Dictionary<string, string>()
+            data.NetworkACLs.PublicNetwork.Allow.Add(new MgmtSignalR.Models.SignalRRequestType("ClientConnection"));
+            data.NetworkACLs.PrivateEndpoints.Add(new MgmtSignalR.Models.PrivateEndpointACL(name: "mySignalRService.1fa229cd-bf3f-47f0-8c49-afb36723997e"));
+            data.Tags.ReplaceWith(new Dictionary<string, string>()
             {
                 ["key1"] = "value1",
             });
-            parameters.Features.Add(new MgmtSignalR.Models.SignalRFeature(flag: new MgmtSignalR.Models.FeatureFlags("ServiceMode"), value: "Serverless"));
-            parameters.Features.Add(new MgmtSignalR.Models.SignalRFeature(flag: new MgmtSignalR.Models.FeatureFlags("EnableConnectivityLogs"), value: "True"));
-            parameters.Features.Add(new MgmtSignalR.Models.SignalRFeature(flag: new MgmtSignalR.Models.FeatureFlags("EnableMessagingLogs"), value: "False"));
-            parameters.NetworkACLs.PrivateEndpoints[0].Allow.Add(new MgmtSignalR.Models.SignalRRequestType("ServerConnection"));
+            data.Features.Add(new MgmtSignalR.Models.SignalRFeature(flag: new MgmtSignalR.Models.FeatureFlags("ServiceMode"), value: "Serverless"));
+            data.Features.Add(new MgmtSignalR.Models.SignalRFeature(flag: new MgmtSignalR.Models.FeatureFlags("EnableConnectivityLogs"), value: "True"));
+            data.Features.Add(new MgmtSignalR.Models.SignalRFeature(flag: new MgmtSignalR.Models.FeatureFlags("EnableMessagingLogs"), value: "False"));
+            data.NetworkACLs.PrivateEndpoints[0].Allow.Add(new MgmtSignalR.Models.SignalRRequestType("ServerConnection"));
 
             var collection = GetArmClient().GetResourceGroupResource(ResourceGroupResource.CreateResourceIdentifier("00000000-0000-0000-0000-000000000000", "myResourceGroup")).GetSignalRResources();
-            await collection.CreateOrUpdateAsync(WaitUntil.Completed, resourceName, parameters);
+            await collection.CreateOrUpdateAsync(WaitUntil.Completed, resourceName, data);
         }
 
         [RecordedTest]

@@ -30,9 +30,9 @@ namespace MgmtSignalR.Tests.Mock
             // Example: SignalR_CheckNameAvailability
             var subscriptionResource = GetArmClient().GetSubscriptionResource(SubscriptionResource.CreateResourceIdentifier("00000000-0000-0000-0000-000000000000"));
             string location = "eastus";
-            MgmtSignalR.Models.NameAvailabilityParameters parameters = new MgmtSignalR.Models.NameAvailabilityParameters(resourceType: "Microsoft.SignalRService/SignalR", name: "my-signalr-service");
+            MgmtSignalR.Models.NameAvailabilityParameters nameAvailabilityParameters = new MgmtSignalR.Models.NameAvailabilityParameters(resourceType: "Microsoft.SignalRService/SignalR", name: "my-signalr-service");
 
-            await subscriptionResource.CheckNameAvailabilitySignalRAsync(location, parameters);
+            await subscriptionResource.CheckNameAvailabilitySignalRAsync(location, nameAvailabilityParameters);
         }
 
         [RecordedTest]
